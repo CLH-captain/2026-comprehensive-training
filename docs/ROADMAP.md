@@ -4,10 +4,10 @@
 
 ## Phase 1：项目初始化
 
-- [ ] 建立根目录规范、环境变量模板和本机环境检查脚本。
-- [ ] 建立 FastAPI 最小可启动应用、配置系统和健康检查测试。
-- [ ] 建立 Vue 3 + TypeScript + Vite 工程、API Client 和启动状态页。
-- [ ] 编写 Windows 本机 MySQL/Ollama/Hermes 启动说明。
+- [x] 建立根目录规范、环境变量模板和本机环境检查脚本。
+- [x] 建立 FastAPI 最小可启动应用、配置系统和健康检查测试。
+- [x] 建立 Vue 3 + TypeScript + Vite 工程、API Client 和启动状态页。
+- [x] 编写 Windows 本机 MySQL/Ollama/Hermes 启动说明。
 
 ## Phase 2：数据库
 
