@@ -31,10 +31,10 @@
 
 ## Phase 5：FastAPI 业务接口
 
-- [ ] 实现 JWT、注销、初始管理员和 RBAC。
-- [ ] 实现基础字典、学生、社团、活动、报名、签到 API。
-- [ ] 实现 Statistics API、分页、统一错误和 request_id。
-- [ ] 完成 admin、club_manager、student 权限矩阵 API 测试。
+- [x] 实现 JWT、注销、初始管理员和 RBAC。
+- [x] 实现基础字典、学生、社团、活动、报名、签到 API。
+- [x] 实现 Statistics API、分页、统一错误和 request_id。
+- [x] 完成 admin、club_manager、student 权限矩阵 API 测试。
 
 ## Phase 6：Vue 管理与统计前端
 
@@ -78,3 +78,4 @@
 
 - 实训报告和答辩 PPT 在系统验收后单独制作。
 - Phase 12 的 MCP、Skills、Excel、自动报告等不属于当前 MVP。
+- 本课程项目不做移动端适配；保留必要认证与数据权限，不追加生产级限流和复杂审计。

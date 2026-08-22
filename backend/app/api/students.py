@@ -2,6 +2,10 @@ from typing import Annotated, Literal
 
 from fastapi import APIRouter, HTTPException, Path, Query, Request
 
+from app.api.dependencies import AuthorizedScope
+from app.core.permissions import require_role
+from app.schemas.business import StudentCreate, StudentUpdate
+from app.services.crud import CrudService
 from app.services.students import StudentService
 
 router = APIRouter(prefix="/students", tags=["students"])
@@ -37,3 +41,35 @@ def student_detail(student_id: Annotated[int, Path(ge=1)], request: Request) -> 
     if student is None:
         raise HTTPException(status_code=404, detail="Student not found")
     return student
+
+
+@router.post("", status_code=201)
+def create_student(
+    payload: StudentCreate, request: Request, scope: AuthorizedScope
+) -> dict:
+    require_role(scope, "admin")
+    with request.app.state.engine.begin() as connection:
+        return CrudService(connection).create_student(payload.model_dump())
+
+
+@router.put("/{student_id}")
+def update_student(
+    student_id: Annotated[int, Path(ge=1)],
+    payload: StudentUpdate,
+    request: Request,
+    scope: AuthorizedScope,
+) -> dict:
+    require_role(scope, "admin")
+    with request.app.state.engine.begin() as connection:
+        return CrudService(connection).update_student(
+            student_id, payload.model_dump(exclude_unset=True)
+        )
+
+
+@router.delete("/{student_id}", status_code=204)
+def delete_student(
+    student_id: Annotated[int, Path(ge=1)], request: Request, scope: AuthorizedScope
+) -> None:
+    require_role(scope, "admin")
+    with request.app.state.engine.begin() as connection:
+        CrudService(connection).deactivate_student(student_id)

@@ -26,11 +26,11 @@
 - 修改 `backend/app/main.py`
 - 测试 `backend/tests/api/test_auth.py`
 
-- [ ] 实现 Argon2 哈希校验、JWT 创建/解析和严格 claim 校验。
-- [ ] 实现 `/api/auth/login`、`/me`、`/logout` 与撤销令牌查询。
-- [ ] 实现幂等初始管理员创建命令，密码只从环境变量读取。
-- [ ] 实现 request_id 中间件和统一异常响应。
-- [ ] 覆盖成功登录、错误密码、禁用账号、过期/伪造/撤销令牌测试。
+- [x] 实现 Argon2 哈希校验、JWT 创建/解析和严格 claim 校验。
+- [x] 实现 `/api/auth/login`、`/me`、`/logout` 与撤销令牌查询。
+- [x] 实现幂等初始管理员创建命令，密码只从环境变量读取。
+- [x] 实现 request_id 中间件和统一异常响应。
+- [x] 覆盖成功登录、错误密码、禁用账号、过期/伪造/撤销令牌测试。
 
 ### Task 2：RBAC 与查询作用域
 
@@ -39,10 +39,10 @@
 - 扩展 `backend/app/api/dependencies.py`
 - 测试 `backend/tests/api/test_rbac.py`
 
-- [ ] 定义 `CurrentUser`、`AccessScope` 和角色依赖。
-- [ ] 从 `user_club_roles` 加载社团经理的允许社团集合。
-- [ ] 将社团/学生作用域传入 Service 查询条件，在数据库层限制结果。
-- [ ] 覆盖 admin、club_manager、student 的允许与拒绝矩阵。
+- [x] 定义 `CurrentUser`、`AccessScope` 和角色依赖。
+- [x] 从 `user_club_roles` 加载社团经理的允许社团集合。
+- [x] 将社团/学生作用域传入 Service 查询条件，在数据库层限制结果。
+- [x] 覆盖 admin、club_manager、student 的允许与拒绝矩阵。
 
 ### Task 3：基础字典、学生和社团 CRUD
 
@@ -53,10 +53,10 @@
 - 测试 `backend/tests/api/test_students_crud.py`
 - 测试 `backend/tests/api/test_clubs_crud.py`
 
-- [ ] 实现 campuses、terms、colleges、majors、club/activity categories、venues 查询与管理员维护。
-- [ ] 实现学生创建、更新、详情、列表和停用。
-- [ ] 实现社团创建、更新、详情、列表、停用及成员关系维护。
-- [ ] 保持现有列表响应和展示字段兼容，并增加权限作用域。
+- [x] 实现 campuses、terms、colleges、majors、club/activity categories、venues 查询与管理员维护。
+- [x] 实现学生创建、更新、详情、列表和停用。
+- [x] 实现社团创建、更新、详情、列表、停用及成员关系维护。
+- [x] 保持现有列表响应和展示字段兼容，并增加权限作用域。
 
 ### Task 4：活动、报名和签到 CRUD
 
@@ -66,10 +66,10 @@
 - 测试 `backend/tests/api/test_registrations.py`
 - 测试 `backend/tests/api/test_attendance.py`
 
-- [ ] 实现活动创建、更新、发布、完成、取消和历史友好删除。
-- [ ] 实现报名创建/取消/候补及容量、重复报名、时间状态校验。
-- [ ] 实现签到创建/修正，保证学生、活动和报名关系一致。
-- [ ] 实现按活动、社团和本人范围查询报名与签到。
+- [x] 实现活动创建、更新、发布、完成、取消和历史友好删除。
+- [x] 实现报名创建/取消/候补及容量、重复报名、时间状态校验。
+- [x] 实现签到创建/修正，保证学生、活动和报名关系一致。
+- [x] 实现按活动、社团和本人范围查询报名与签到。
 
 ### Task 5：Statistics 权限接入、文档与阶段验收
 
@@ -79,7 +79,7 @@
 - 修改 `docs/TESTING.md`
 - 修改 `docs/ROADMAP.md`
 
-- [ ] 将 Statistics 筛选器与 `AccessScope` 合并，防止越权传参。
-- [ ] 完成参数校验、分页元数据、错误码和 request_id 的兼容测试。
-- [ ] 运行后端全量 pytest/Ruff 与前端回归测试/构建。
-- [ ] 编写 API 文档、更新路线图并提交 Phase 5 里程碑。
+- [x] 将 Statistics 筛选器与 `AccessScope` 合并，防止越权传参。
+- [x] 完成参数校验、分页元数据、错误码和 request_id 的兼容测试。
+- [x] 运行后端全量 pytest/Ruff 与前端回归测试/构建。
+- [x] 编写 API 文档、更新路线图并提交 Phase 5 里程碑。

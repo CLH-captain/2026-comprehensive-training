@@ -3,6 +3,8 @@ from typing import Annotated, Literal
 
 from fastapi import APIRouter, Depends, HTTPException, Path, Query, Request
 
+from app.api.dependencies import AuthenticatedUser
+from app.core.errors import AppError
 from app.statistics.filters import StatisticsFilter
 from app.statistics.service import StatisticsService
 
@@ -85,7 +87,10 @@ def statistics_student_summary(
     student_id: Annotated[int, Path(ge=1)],
     request: Request,
     filters: Annotated[StatisticsFilter, Depends(statistics_filter)],
+    user: AuthenticatedUser,
 ) -> dict:
+    if user.role != "admin" and user.student_id != student_id:
+        raise AppError(403, "FORBIDDEN", "Student summary is limited to your own account")
     with request.app.state.engine.connect() as connection:
         result = StatisticsService(connection).student_summary(student_id, filters)
     if result is None:

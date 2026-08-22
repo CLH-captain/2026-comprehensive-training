@@ -1,17 +1,28 @@
 from collections.abc import Iterator
+from datetime import UTC, datetime, timedelta
 
 import pytest
 from fastapi import FastAPI
 from fastapi.testclient import TestClient
 from sqlalchemy import create_engine
 
+from app.api.dependencies import CurrentUser, get_current_user
 from app.core.config import get_settings
+from app.core.security import TokenClaims
 from app.main import create_app
 
 
 @pytest.fixture(scope="module")
 def statistics_client() -> Iterator[TestClient]:
     app: FastAPI = create_app()
+    now = datetime.now(UTC)
+    app.dependency_overrides[get_current_user] = lambda: CurrentUser(
+        id=1,
+        username="statistics_admin",
+        role="admin",
+        student_id=None,
+        token=TokenClaims(1, "admin", "test-jti", now, now + timedelta(hours=1)),
+    )
     original_engine = app.state.engine
     app.state.engine = create_engine(get_settings().test_database_url)
     with TestClient(app) as client:
