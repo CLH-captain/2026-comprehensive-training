@@ -1,6 +1,6 @@
 # 社团管理展示页 Implementation Plan
 
-> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
+> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [x]`) syntax for tracking.
 
 **Goal:** 快速完成内容完整、数据真实的社团管理展示页，自动化测试与深度验收后置。
 
@@ -27,9 +27,9 @@
 - Produces: `GET /api/clubs`，支持 `search`、`category_id`、`campus_id`、`status`、`page`、`page_size`。
 - Produces: `GET /api/clubs/{club_id}`，返回成员结构、活动汇总、近期活动和热门成员。
 
-- [ ] **Step 1: 实现参数化列表查询与分页**
-- [ ] **Step 2: 实现社团详情聚合查询**
-- [ ] **Step 3: 注册 `/api/clubs` 路由并运行 Ruff**
+- [x] **Step 1: 实现参数化列表查询与分页**
+- [x] **Step 2: 实现社团详情聚合查询**
+- [x] **Step 3: 注册 `/api/clubs` 路由并运行 Ruff**
 
 ### Task 2: 社团管理前端
 
@@ -44,10 +44,10 @@
 - Consumes: `GET /api/clubs` 与 `GET /api/clubs/{club_id}`。
 - Produces: `/clubs` 页面及所有现有侧栏的社团管理入口。
 
-- [ ] **Step 1: 实现摘要、搜索筛选、分页表格**
-- [ ] **Step 2: 实现社团详情抽屉、成员结构与近期活动**
-- [ ] **Step 3: 注册路由并连接侧栏**
-- [ ] **Step 4: 运行 TypeScript 检查与生产构建**
+- [x] **Step 1: 实现摘要、搜索筛选、分页表格**
+- [x] **Step 2: 实现社团详情抽屉、成员结构与近期活动**
+- [x] **Step 3: 注册路由并连接侧栏**
+- [x] **Step 4: 运行 TypeScript 检查与生产构建**
 
 ### Task 3: 在线展示检查
 
@@ -57,6 +57,6 @@
 **Interfaces:**
 - Produces: 可由用户在浏览器验收的 `/clubs` 页面。
 
-- [ ] **Step 1: 验证列表总数为 45 且详情接口返回聚合数据**
-- [ ] **Step 2: 重启演示服务并验证 `/clubs` 为 HTTP 200**
-- [ ] **Step 3: 提交社团页面独立里程碑并停止等待用户验收**
+- [x] **Step 1: 验证列表总数为 45 且详情接口返回聚合数据**
+- [x] **Step 2: 重启演示服务并验证 `/clubs` 为 HTTP 200**
+- [x] **Step 3: 提交社团页面独立里程碑并停止等待用户验收**
