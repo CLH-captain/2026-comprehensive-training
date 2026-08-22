@@ -10,6 +10,7 @@ from app.api.auth import router as auth_router
 from app.api.clubs import router as clubs_router
 from app.api.dictionaries import router as dictionaries_router
 from app.api.health import router as health_router
+from app.api.internal_agent_tools import router as internal_agent_tools_router
 from app.api.participation import router as participation_router
 from app.api.statistics import router as statistics_router
 from app.api.students import router as students_router
@@ -46,6 +47,7 @@ def create_app(settings: Settings | None = None) -> FastAPI:
     app.include_router(clubs_router, prefix="/api")
     app.include_router(dictionaries_router, prefix="/api")
     app.include_router(health_router, prefix="/api")
+    app.include_router(internal_agent_tools_router, prefix="/api")
     app.include_router(participation_router, prefix="/api")
     app.include_router(students_router, prefix="/api")
     app.include_router(statistics_router, prefix="/api")

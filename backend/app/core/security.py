@@ -81,3 +81,47 @@ def decode_access_token(token: str, secret: str) -> TokenClaims:
     if user_id < 1 or not role or not jti:
         raise InvalidTokenError("Invalid access token claims")
     return TokenClaims(user_id, role, jti, issued_at, expires_at)
+@dataclass(frozen=True)
+class AgentContextClaims:
+    user_id: int
+    conversation_id: int | None
+    expires_at: datetime
+
+
+def create_agent_context_token(
+    *, user_id: int, conversation_id: int | None, secret: str, expire_minutes: int = 5
+) -> str:
+    now = datetime.now(UTC)
+    return jwt.encode(
+        {
+            "sub": str(user_id),
+            "conversation_id": conversation_id,
+            "purpose": "agent-tools",
+            "iat": now,
+            "exp": now + timedelta(minutes=expire_minutes),
+        },
+        secret,
+        algorithm=ALGORITHM,
+    )
+
+
+def decode_agent_context_token(token: str, secret: str) -> AgentContextClaims:
+    try:
+        payload = jwt.decode(
+            token,
+            secret,
+            algorithms=[ALGORITHM],
+            options={"require": ["sub", "purpose", "iat", "exp"]},
+        )
+        if payload["purpose"] != "agent-tools":
+            raise InvalidTokenError("Invalid Agent context token purpose")
+        user_id = int(payload["sub"])
+        conversation_id = payload.get("conversation_id")
+        if conversation_id is not None:
+            conversation_id = int(conversation_id)
+        expires_at = datetime.fromtimestamp(int(payload["exp"]), UTC)
+    except (jwt.PyJWTError, KeyError, TypeError, ValueError) as exc:
+        raise InvalidTokenError("Invalid or expired Agent context token") from exc
+    if user_id < 1 or (conversation_id is not None and conversation_id < 1):
+        raise InvalidTokenError("Invalid Agent context token claims")
+    return AgentContextClaims(user_id, conversation_id, expires_at)
