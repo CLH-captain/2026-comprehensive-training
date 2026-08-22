@@ -116,7 +116,7 @@ onMounted(loadStudents)
         <RouterLink class="nav-item" to="/"><span>▦</span>数据总览</RouterLink>
         <RouterLink class="nav-item nav-item--active" to="/students"><span>◎</span>学生管理</RouterLink>
         <RouterLink class="nav-item" to="/clubs"><span>◇</span>社团管理</RouterLink>
-        <span class="nav-item nav-item--disabled"><span>□</span>活动管理</span>
+        <RouterLink class="nav-item" to="/activities"><span>□</span>活动管理</RouterLink>
         <span class="nav-item nav-item--disabled"><span>⌁</span>统计分析</span>
         <span class="nav-item nav-item--disabled"><span>✦</span>智能分析</span>
       </nav>

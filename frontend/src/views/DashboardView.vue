@@ -90,7 +90,7 @@ onMounted(loadDashboard)
         <a class="nav-item nav-item--active" href="#"><span>▦</span>数据总览</a>
         <a class="nav-item" href="/students"><span>◎</span>学生管理</a>
         <a class="nav-item" href="/clubs"><span>◇</span>社团管理</a>
-        <a class="nav-item" href="#activities"><span>□</span>活动管理</a>
+        <a class="nav-item" href="/activities"><span>□</span>活动管理</a>
         <a class="nav-item" href="#analytics"><span>⌁</span>统计分析</a>
         <a class="nav-item" href="#agent"><span>✦</span>智能分析</a>
       </nav>

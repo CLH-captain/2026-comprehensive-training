@@ -1,5 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router'
 
+import ActivityManagementView from '@/views/ActivityManagementView.vue'
 import ClubManagementView from '@/views/ClubManagementView.vue'
 import DashboardView from '@/views/DashboardView.vue'
 import StudentManagementView from '@/views/StudentManagementView.vue'
@@ -21,6 +22,11 @@ export const router = createRouter({
       path: '/clubs',
       name: 'clubs',
       component: ClubManagementView,
+    },
+    {
+      path: '/activities',
+      name: 'activities',
+      component: ActivityManagementView,
     },
   ],
 })
