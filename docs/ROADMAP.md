@@ -11,17 +11,17 @@
 
 ## Phase 2：数据库
 
-- [ ] 建立 SQLAlchemy Base、Session 和测试库隔离保护。
-- [ ] 实现 18 张业务/认证表及关系、枚举、约束和索引。
-- [ ] 创建首个 Alembic 迁移并在开发库、测试库验证升级/降级。
-- [ ] 编写 Model、约束、外键和迁移测试。
+- [x] 建立 SQLAlchemy Base、Session 和测试库隔离保护。
+- [x] 实现 18 张业务/认证表及关系、枚举、约束和索引。
+- [x] 创建首个 Alembic 迁移并在开发库、测试库验证升级/降级。
+- [x] 编写 Model、约束、外键和迁移测试。
 
 ## Phase 3：仿真数据集
 
-- [ ] 实现固定种子配置、学院偏好和分布模型。
-- [ ] 生成基础字典、学生、社团、成员、活动、报名和签到。
-- [ ] 支持 MySQL Seed、CSV 导出和安全 `--reset`。
-- [ ] 生成并验证 `data_quality_report.json`。
+- [x] 实现固定种子配置、学院偏好和分布模型。
+- [x] 生成基础字典、学生、社团、成员、活动、报名和签到。
+- [x] 支持 MySQL Seed、CSV 导出和安全 `--reset`。
+- [x] 生成并验证 `data_quality_report.json`。
 
 ## Phase 4：Statistics Service
 

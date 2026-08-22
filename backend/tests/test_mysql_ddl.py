@@ -1,7 +1,8 @@
-from app.db.base import Base
-from app.models import *
 from sqlalchemy.dialects.mysql import dialect
 from sqlalchemy.schema import CreateTable
+
+from app.db.base import Base
+from app.models import *
 
 
 def test_every_table_compiles_for_mysql() -> None:

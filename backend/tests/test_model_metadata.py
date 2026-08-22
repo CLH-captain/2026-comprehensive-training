@@ -1,8 +1,9 @@
 from collections.abc import Iterable
 
+from sqlalchemy import Table, UniqueConstraint
+
 from app.db.base import Base
 from app.models import *
-from sqlalchemy import Table, UniqueConstraint
 
 EXPECTED_TABLES = {
     "campuses",

@@ -2,7 +2,7 @@
 
 本项目使用 Vue 3、FastAPI、MySQL 与 Hermes Agent 构建校园社团活动数据管理、统计分析和自然语言查询平台。所有业务数据均为固定种子生成的仿真数据；所有统计数字以 MySQL 为唯一来源。
 
-当前完成 Phase 1：项目结构、配置契约、FastAPI 健康检查、Vue 启动状态页和本机环境检查。
+当前可展示版本已完成本机 MySQL 配置、18 张业务表、固定种子仿真数据、Statistics Service 与 Vue 数据总览。Hermes、完整 CRUD 和权限功能按路线图继续开发。
 
 ## 本机环境
 
@@ -58,6 +58,22 @@ python -c "import secrets; print(secrets.token_urlsafe(48))"
 
 `.env` 已被 Git 忽略。不要把真实密码或 Key 写入 `.env.example`、README、测试或提交记录。
 
+## 快速启动初版演示
+
+数据库已迁移并完成 Seed 后，在项目根目录运行：
+
+```powershell
+powershell -ExecutionPolicy Bypass -File scripts\start-demo.ps1
+```
+
+浏览器访问 `http://127.0.0.1:5173`，API 文档位于 `http://127.0.0.1:8000/docs`。结束演示：
+
+```powershell
+powershell -ExecutionPolicy Bypass -File scripts\stop-demo.ps1
+```
+
+Dashboard 展示的数据实时来自本机 MySQL，可按学期和校区筛选。
+
 ## 启动后端
 
 首次安装：
@@ -95,7 +111,7 @@ pnpm install
 pnpm --filter szut-club-agent-frontend dev
 ```
 
-浏览器访问 `http://127.0.0.1:5173`。启动页会真实请求 FastAPI 健康检查，不显示硬编码业务统计。
+浏览器访问 `http://127.0.0.1:5173`。Dashboard 会请求 FastAPI Statistics API，所有指标和图表均来自 MySQL。
 
 ## 测试与构建
 

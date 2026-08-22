@@ -1,4 +1,5 @@
 import pytest
+
 from app.db.session import assert_test_database_url
 
 
