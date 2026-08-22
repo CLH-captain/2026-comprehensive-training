@@ -88,7 +88,7 @@ onMounted(loadDashboard)
       <div class="brand"><span class="brand-seal">S</span><div><strong>SZUT</strong><small>校园活动数据中心</small></div></div>
       <nav aria-label="主导航">
         <a class="nav-item nav-item--active" href="#"><span>▦</span>数据总览</a>
-        <a class="nav-item" href="#students"><span>◎</span>学生管理</a>
+        <a class="nav-item" href="/students"><span>◎</span>学生管理</a>
         <a class="nav-item" href="#clubs"><span>◇</span>社团管理</a>
         <a class="nav-item" href="#activities"><span>□</span>活动管理</a>
         <a class="nav-item" href="#analytics"><span>⌁</span>统计分析</a>

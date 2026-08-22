@@ -3,6 +3,7 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from app.api.health import router as health_router
 from app.api.statistics import router as statistics_router
+from app.api.students import router as students_router
 from app.core.config import Settings, get_settings
 from app.db.session import create_engine_from_url
 
@@ -20,5 +21,6 @@ def create_app(settings: Settings | None = None) -> FastAPI:
         allow_headers=["*"],
     )
     app.include_router(health_router, prefix="/api")
+    app.include_router(students_router, prefix="/api")
     app.include_router(statistics_router, prefix="/api")
     return app

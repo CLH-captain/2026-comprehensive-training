@@ -8,10 +8,23 @@ if (-not (Test-Path -LiteralPath $processFile)) {
 }
 
 $processIds = Get-Content -LiteralPath $processFile -Raw -Encoding utf8 | ConvertFrom-Json
-foreach ($processId in @($processIds.backend, $processIds.frontend)) {
-    $process = Get-Process -Id $processId -ErrorAction SilentlyContinue
-    if ($process) {
-        Stop-Process -Id $processId
+$allProcesses = Get-CimInstance Win32_Process
+$targetIds = [System.Collections.Generic.HashSet[int]]::new()
+
+function Add-ProcessTree([int]$parentId) {
+    foreach ($child in $allProcesses | Where-Object { $_.ParentProcessId -eq $parentId }) {
+        Add-ProcessTree $child.ProcessId
+    }
+    [void]$targetIds.Add($parentId)
+}
+
+foreach ($rootId in @($processIds.backend, $processIds.frontend)) {
+    Add-ProcessTree $rootId
+}
+foreach ($processId in $targetIds) {
+    $process = $allProcesses | Where-Object { $_.ProcessId -eq $processId }
+    if ($process -and $process.CommandLine -like "*$projectRoot*") {
+        Stop-Process -Id $processId -ErrorAction SilentlyContinue
     }
 }
 Remove-Item -LiteralPath $processFile -Force
