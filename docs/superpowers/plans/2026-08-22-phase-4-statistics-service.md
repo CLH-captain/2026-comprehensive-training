@@ -1,6 +1,6 @@
 # Phase 4 Statistics Service Implementation Plan
 
-> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
+> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [x]`) syntax for tracking.
 
 **Goal:** 建立 Dashboard、Statistics API 和后续 Agent Tool 共用的确定性统计层，并用固定种子数据验证所有核心数字。
 
@@ -31,7 +31,7 @@
 - Produces: `StatisticsFilter(term_id, campus_id, college_id, club_id, date_from, date_to)`。
 - Produces: `activity_where(alias="a", venue_alias="v") -> tuple[str, dict]`，所有模块共享同一筛选语义。
 
-- [ ] **Step 1: 编写筛选参数与日期左闭右开测试**
+- [x] **Step 1: 编写筛选参数与日期左闭右开测试**
 
 ```python
 filters = StatisticsFilter(term_id=2, campus_id=1, date_from=date(2026, 3, 1), date_to=date(2026, 4, 1))
@@ -40,8 +40,8 @@ assert "a.term_id = :term_id" in where
 assert params["date_to"] == datetime(2026, 4, 1)
 ```
 
-- [ ] **Step 2: 实现冻结 dataclass、参数化 WHERE 和月份序列补零工具**
-- [ ] **Step 3: 运行 `pytest backend/tests/statistics/test_filters.py -q` 和 Ruff**
+- [x] **Step 2: 实现冻结 dataclass、参数化 WHERE 和月份序列补零工具**
+- [x] **Step 3: 运行 `pytest backend/tests/statistics/test_filters.py -q` 和 Ruff**
 
 ### Task 2: 总览、趋势与分布
 
@@ -56,9 +56,9 @@ assert params["date_to"] == datetime(2026, 4, 1)
 - Produces: `monthly_trend(connection, filters) -> list[dict]`，自动补齐月份。
 - Produces: `category_distribution`、`college_distribution`、`campus_distribution`。
 
-- [ ] **Step 1: 编写固定数据集总览与月份补零测试**
-- [ ] **Step 2: 实现总览、月度趋势、类别/学院/校区分布查询**
-- [ ] **Step 3: 运行专项测试并确认比率为两位小数或 `None`**
+- [x] **Step 1: 编写固定数据集总览与月份补零测试**
+- [x] **Step 2: 实现总览、月度趋势、类别/学院/校区分布查询**
+- [x] **Step 3: 运行专项测试并确认比率为两位小数或 `None`**
 
 ### Task 3: 排行、实体摘要与统一活跃度
 
@@ -73,10 +73,10 @@ assert params["date_to"] == datetime(2026, 4, 1)
 - Produces: `student_summary(student_id)` 与 `club_summary(club_id)`。
 - Produces: 每个社团 `activity_score`，范围 `0.00..100.00`。
 
-- [ ] **Step 1: 编写稳定排序、limit 上限和活跃度公式测试**
-- [ ] **Step 2: 实现四类排行及社团活跃度**
-- [ ] **Step 3: 实现学生/社团摘要及不存在实体处理**
-- [ ] **Step 4: 运行排行和摘要专项测试**
+- [x] **Step 1: 编写稳定排序、limit 上限和活跃度公式测试**
+- [x] **Step 2: 实现四类排行及社团活跃度**
+- [x] **Step 3: 实现学生/社团摘要及不存在实体处理**
+- [x] **Step 4: 运行排行和摘要专项测试**
 
 ### Task 4: StatisticsService 门面与 API
 
@@ -91,10 +91,10 @@ assert params["date_to"] == datetime(2026, 4, 1)
 - Produces: `StatisticsService.dashboard(filters)`，兼容现有 Dashboard 响应。
 - Produces: `/api/statistics/overview`、`/trends/monthly`、`/rankings/{dimension}`、`/distributions/{dimension}`、`/students/{id}`、`/clubs/{id}`。
 
-- [ ] **Step 1: 实现门面并让现有 Dashboard 复用新模块**
-- [ ] **Step 2: 实现严格枚举、limit 和筛选参数 API**
-- [ ] **Step 3: 编写 API 成功、参数错误和不存在实体测试**
-- [ ] **Step 4: 运行 Dashboard 前端类型检查与后端 API 测试**
+- [x] **Step 1: 实现门面并让现有 Dashboard 复用新模块**
+- [x] **Step 2: 实现严格枚举、limit 和筛选参数 API**
+- [x] **Step 3: 编写 API 成功、参数错误和不存在实体测试**
+- [x] **Step 4: 运行 Dashboard 前端类型检查与后端 API 测试**
 
 ### Task 5: 独立 SQL 基准与阶段验收
 
@@ -108,7 +108,7 @@ assert params["date_to"] == datetime(2026, 4, 1)
 - Consumes: `TEST_DATABASE_URL`，并先调用 `assert_test_database_url`。
 - Produces: 固定种子数据下服务结果与独立 SQL 结果 100% 一致的验收记录。
 
-- [ ] **Step 1: 为总览、趋势、四类排行和三类分布编写独立基准 SQL**
-- [ ] **Step 2: 对比 Service DTO 与基准结果，失败时报告具体维度**
-- [ ] **Step 3: 运行后端全量 pytest、Ruff、前端测试/类型检查/构建**
-- [ ] **Step 4: 更新 Phase 4 路线图与测试文档并提交阶段里程碑**
+- [x] **Step 1: 为总览、趋势、四类排行和三类分布编写独立基准 SQL**
+- [x] **Step 2: 对比 Service DTO 与基准结果，失败时报告具体维度**
+- [x] **Step 3: 运行后端全量 pytest、Ruff、前端测试/类型检查/构建**
+- [x] **Step 4: 更新 Phase 4 路线图与测试文档并提交阶段里程碑**

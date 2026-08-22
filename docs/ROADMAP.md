@@ -25,9 +25,9 @@
 
 ## Phase 4：Statistics Service
 
-- [ ] 实现 overview、社团/活动排行、趋势和分布。
-- [ ] 实现 student summary、club summary 和统一活跃度。
-- [ ] 对固定数据集建立 SQL 基准答案和 100% 确定性统计测试。
+- [x] 实现 overview、社团/活动排行、趋势和分布。
+- [x] 实现 student summary、club summary 和统一活跃度。
+- [x] 对固定数据集建立 SQL 基准答案和 100% 确定性统计测试。
 
 ## Phase 5：FastAPI 业务接口
 

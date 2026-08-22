@@ -3,7 +3,7 @@ export interface Overview {
   completed_activities: number
   participations: number
   active_students: number
-  attendance_rate: string | null
+  attendance_rate: number | null
 }
 
 export interface TrendPoint {
