@@ -90,6 +90,7 @@ class ActivityService:
             "categories": self.connection.execute(text("SELECT id, name FROM activity_categories WHERE is_active = 1 ORDER BY id")).mappings().all(),
             "clubs": self.connection.execute(text("SELECT id, name FROM clubs WHERE status = 'active' ORDER BY name")).mappings().all(),
             "campuses": self.connection.execute(text("SELECT id, name FROM campuses WHERE is_active = 1 ORDER BY id")).mappings().all(),
+            "venues": self.connection.execute(text("SELECT id, name, campus_id FROM venues WHERE is_active = 1 ORDER BY campus_id, name")).mappings().all(),
         }
         return {
             "items": [dict(row) for row in rows],

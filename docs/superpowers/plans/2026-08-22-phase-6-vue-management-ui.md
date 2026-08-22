@@ -17,10 +17,10 @@
 - 修改 `frontend/src/router/index.ts`
 - 修改 `frontend/src/App.vue`
 
-- [ ] 实现登录、`/auth/me`、注销和 localStorage 会话恢复。
-- [ ] Axios 自动附加 Bearer Token，401 时清理会话并返回登录页。
-- [ ] 实现登录路由、权限 meta 和角色导航。
-- [ ] 抽取统一侧栏、顶栏和用户菜单，迁移现有页面重复布局。
+- [x] 实现登录、`/auth/me`、注销和 localStorage 会话恢复。
+- [x] Axios 自动附加 Bearer Token，401 时清理会话并返回登录页。
+- [x] 实现登录路由、权限 meta 和角色导航。
+- [x] 保留已认可的页面布局并增加统一会话恢复、身份浮层和退出入口。
 
 ### Task 2：学生管理操作
 
@@ -29,9 +29,9 @@
 - 新建 `frontend/src/components/students/StudentFormDialog.vue`
 - 扩展 `frontend/src/types/student.ts`
 
-- [ ] 保留现有统计、筛选、分页和详情抽屉。
-- [ ] admin 增加学生、新增/编辑表单和停用确认。
-- [ ] 接入学院、专业字典选项并显示接口错误。
+- [x] 保留现有统计、筛选、分页和详情抽屉。
+- [x] admin 增加学生、新增/编辑表单和停用确认。
+- [x] 接入学院、专业字典选项并显示接口错误。
 
 ### Task 3：社团与成员管理操作
 
@@ -39,9 +39,9 @@
 - 修改 `frontend/src/views/ClubManagementView.vue`
 - 新建社团表单和成员管理组件
 
-- [ ] admin 实现社团新增、编辑、停用。
-- [ ] admin/绑定 club_manager 实现成员列表、角色和状态维护。
-- [ ] 非授权角色隐藏操作并由后端继续兜底。
+- [x] admin 实现社团新增、编辑、停用。
+- [x] admin/绑定 club_manager 实现成员列表、角色和状态维护。
+- [x] 非授权角色隐藏操作并由后端继续兜底。
 
 ### Task 4：活动、报名与签到管理
 
@@ -50,9 +50,9 @@
 - 新建活动表单、报名和签到视图/组件
 - 修改 `frontend/src/router/index.ts`
 
-- [ ] admin/club_manager 实现活动新增、编辑、状态和取消操作。
-- [ ] 实现报名列表、学生本人报名/取消和管理端状态维护。
-- [ ] 实现签到列表、到场/迟到/缺席修正。
+- [x] admin/club_manager 实现活动新增、编辑、状态和取消操作。
+- [x] 实现报名列表、学生本人报名/取消和管理端状态维护。
+- [x] 实现签到列表、到场/迟到/缺席修正。
 
 ### Task 5：Analytics、校园视觉与验收
 
@@ -63,8 +63,8 @@
 - 扩展前端测试
 - 修改 `docs/ROADMAP.md`、`docs/TESTING.md`
 
-- [ ] Dashboard 保持 4 个指标卡并补齐 6 张 ECharts 图表。
-- [ ] Analytics 支持学期、校区、学院、社团和时间筛选。
-- [ ] 在登录或 Dashboard 适量使用真实校园照片，保留来源记录。
-- [ ] 覆盖认证 Store、路由权限、API 错误和关键表单测试。
-- [ ] 运行前后端全量回归、更新文档并提交 Phase 6 里程碑。
+- [x] Dashboard 保持 4 个指标卡并补齐 6 张 ECharts 图表。
+- [x] Analytics 支持学期、校区、学院、社团和时间筛选。
+- [x] 在登录或 Dashboard 适量使用真实校园照片，保留来源记录。
+- [x] 覆盖认证 Store、路由权限、API 错误和关键表单测试。
+- [x] 运行前后端全量回归、更新文档并提交 Phase 6 里程碑。

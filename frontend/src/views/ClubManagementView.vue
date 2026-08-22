@@ -1,10 +1,16 @@
 <script setup lang="ts">
-import { computed, onMounted, ref, watch } from 'vue'
+import { computed, onMounted, reactive, ref, watch } from 'vue'
 import { RouterLink } from 'vue-router'
 
 import { http } from '@/api/http'
+import ClubFormDialog from '@/components/clubs/ClubFormDialog.vue'
+import { useAuthStore } from '@/stores/auth'
 import type { ClubDetail, ClubListResponse } from '@/types/club'
 
+const auth = useAuthStore()
+const formOpen = ref(false)
+const memberForm = reactive({ student_id: '', role: 'member', status: 'active' })
+const selectedClub = ref<ClubListResponse['items'][number] | null>(null)
 const data = ref<ClubListResponse | null>(null)
 const detail = ref<ClubDetail | null>(null)
 const loading = ref(true)
@@ -39,6 +45,7 @@ async function loadClubs(): Promise<void> {
 }
 
 async function openDetail(id: number): Promise<void> {
+  selectedClub.value = data.value?.items.find((item) => item.id === id) ?? null
   detail.value = null
   detailLoading.value = true
   try {
@@ -48,6 +55,32 @@ async function openDetail(id: number): Promise<void> {
   }
 }
 
+
+function createClub(): void {
+  selectedClub.value = null
+  formOpen.value = true
+}
+function editClub(): void { formOpen.value = true }
+async function saveMember(): Promise<void> {
+  if (!detail.value || !Number(memberForm.student_id)) return
+  await http.put(`/clubs/${detail.value.id}/members`, {
+    student_id: Number(memberForm.student_id), role: memberForm.role,
+    status: memberForm.status, join_date: new Date().toISOString().slice(0, 10),
+  })
+  memberForm.student_id = ''
+  await openDetail(detail.value.id)
+}
+async function deactivateClub(): Promise<void> {
+  if (!detail.value || !window.confirm(`确定停用社团“${detail.value.name}”吗？`)) return
+  await http.delete(`/clubs/${detail.value.id}`)
+  detail.value = null
+  await loadClubs()
+}
+async function clubSaved(): Promise<void> {
+  formOpen.value = false
+  detail.value = null
+  await loadClubs()
+}
 function resetFilters(): void {
   search.value = ''
   categoryId.value = ''
@@ -84,7 +117,7 @@ onMounted(loadClubs)
         <RouterLink class="nav-item" to="/"><span>▦</span>数据总览</RouterLink>
         <RouterLink class="nav-item" to="/students"><span>◎</span>学生管理</RouterLink>
         <RouterLink class="nav-item nav-item--active" to="/clubs"><span>◇</span>社团管理</RouterLink>
-        <RouterLink class="nav-item" to="/activities"><span>□</span>活动管理</RouterLink><span class="nav-item"><span>⌁</span>统计分析</span><span class="nav-item"><span>✦</span>智能分析</span>
+        <RouterLink class="nav-item" to="/activities"><span>□</span>活动管理</RouterLink><RouterLink class="nav-item" to="/participation"><span>✓</span>报名签到</RouterLink><RouterLink class="nav-item" to="/analytics"><span>⌁</span>统计分析</RouterLink><span class="nav-item"><span>✦</span>智能分析</span>
       </nav>
       <div class="sidebar-foot"><i></i><div><strong>系统运行正常</strong><small>社团数据已连接</small></div></div>
     </aside>
@@ -95,7 +128,7 @@ onMounted(loadClubs)
       <section class="cards"><article v-for="card in cards" :key="card.label"><i>{{ card.mark }}</i><div><span>{{ card.label }}</span><strong>{{ formatNumber.format(card.value) }}</strong><small>{{ card.note }}</small></div></article></section>
 
       <section class="panel">
-        <header class="panel-head"><div><small>社团检索</small><h3>社团运行名单</h3></div><span>共 {{ data?.total ?? 0 }} 个社团</span></header>
+        <header class="panel-head"><div><small>社团检索</small><h3>社团运行名单</h3></div><div class="panel-actions"><span>共 {{ data?.total ?? 0 }} 个社团</span><button v-if="auth.isAdmin" type="button" @click="createClub">＋ 新增社团</button></div></header>
         <div class="filters"><label><i>⌕</i><input v-model.trim="search" placeholder="搜索社团名称或编号" /></label><select v-model="categoryId"><option value="">全部类别</option><option v-for="item in data?.options.categories" :key="item.id" :value="String(item.id)">{{ item.name }}</option></select><select v-model="campusId"><option value="">全部校区</option><option v-for="item in data?.options.campuses" :key="item.id" :value="String(item.id)">{{ item.name }}</option></select><select v-model="status"><option value="">全部状态</option><option value="active">正常运行</option><option value="inactive">已停用</option></select><button @click="resetFilters">重置</button></div>
         <div v-if="error" class="error">{{ error }}</div>
         <div v-else class="table-wrap" :class="{ faded: loading }">
@@ -112,13 +145,16 @@ onMounted(loadClubs)
       <p class="description">{{ detail.description }}</p>
       <dl class="facts"><div><dt>指导老师</dt><dd>{{ detail.advisor_name }}</dd></div><div><dt>学生负责人</dt><dd>{{ detail.leader_name }} · {{ detail.leader_student_no }}</dd></div></dl>
       <section class="metrics"><div><b>{{ detail.metrics.member_count }}</b><span>成员</span></div><div><b>{{ detail.metrics.activity_count }}</b><span>活动</span></div><div><b>{{ detail.metrics.participation_count }}</b><span>参与人次</span></div><div><b>{{ detail.metrics.attendance_rate ?? '—' }}%</b><span>到场率</span></div></section>
-      <section class="drawer-section"><header><h3>成员结构</h3><span>骨干 {{ detail.metrics.core_member_count }} 人</span></header><div class="roles"><div v-for="role in detail.role_distribution" :key="role.role"><span>{{ roleLabel(role.role) }}</span><div><i :style="{width: `${Math.max(7, role.count/detail.metrics.member_count*100)}%`}"></i></div><b>{{ role.count }}</b></div></div></section>
+      <div v-if="auth.canManageClubs" class="profile-actions"><button type="button" @click="editClub">编辑社团</button><button v-if="auth.isAdmin" class="danger" type="button" @click="deactivateClub">停用社团</button></div><section class="drawer-section"><header><h3>成员结构</h3><span>骨干 {{ detail.metrics.core_member_count }} 人</span></header><div class="roles"><div v-for="role in detail.role_distribution" :key="role.role"><span>{{ roleLabel(role.role) }}</span><div><i :style="{width: `${Math.max(7, role.count/detail.metrics.member_count*100)}%`}"></i></div><b>{{ role.count }}</b></div></div></section>
       <section class="drawer-section"><header><h3>近期活动</h3><span>{{ detail.recent_activities.length }} 条</span></header><div class="activities"><div v-for="item in detail.recent_activities" :key="item.id"><time>{{ formatDate(item.start_time).slice(5) }}</time><div><b>{{ item.title }}</b><small>{{ item.venue_name }} · {{ item.category_name }}</small></div><span>{{ item.attendance }}/{{ item.registrations }}</span></div></div></section>
-      <section class="drawer-section"><header><h3>活跃成员</h3><span>按角色与参与排序</span></header><div class="members"><div v-for="item in detail.active_members" :key="item.id"><i>{{ item.name.slice(-1) }}</i><div><b>{{ item.name }}</b><small>{{ item.college_name }} · {{ roleLabel(item.role) }}</small></div><span>{{ item.participations }} 次</span></div></div></section>
+      <section class="drawer-section"><header><h3>活跃成员</h3><span>按角色与参与排序</span></header><div v-if="auth.canManageClubs" class="member-editor"><input v-model="memberForm.student_id" type="number" min="1" placeholder="学生 ID" /><select v-model="memberForm.role"><option value="member">普通成员</option><option value="core">骨干成员</option><option value="leader">负责人</option></select><select v-model="memberForm.status"><option value="active">有效</option><option value="inactive">停用</option></select><button type="button" @click="saveMember">保存成员</button></div><div class="members"><div v-for="item in detail.active_members" :key="item.id"><i>{{ item.name.slice(-1) }}</i><div><b>{{ item.name }}</b><small>{{ item.college_name }} · {{ roleLabel(item.role) }}</small></div><span>{{ item.participations }} 次</span></div></div></section>
     </template></aside></div>
   </div>
+  <ClubFormDialog :open="formOpen" :club="selectedClub" :options="data?.options" @close="formOpen = false" @saved="clubSaved" />
 </template>
 
 <style scoped>
 .workspace{min-height:100vh;background:#eef3f2;color:#173237}.sidebar{position:fixed;inset:0 auto 0 0;width:232px;display:flex;flex-direction:column;padding:28px 20px;background:#103f40;color:#eaf6f3}.brand{display:flex;align-items:center;gap:12px;padding:0 8px 28px;border-bottom:1px solid rgba(255,255,255,.12)}.brand-seal{display:grid;place-items:center;width:38px;height:38px;border:1px solid #8ab3af;border-radius:50%;font:22px Georgia}.brand strong,.brand small{display:block}.brand strong{letter-spacing:.14em}.brand small{margin-top:3px;color:#a7cfca;font-size:10px}.sidebar nav{display:grid;gap:7px;margin-top:30px}.nav-item{display:flex;align-items:center;gap:13px;border-radius:7px;padding:12px 14px;color:#b7d3d0;text-decoration:none;font-size:14px}.nav-item>span{width:18px}.nav-item--active,.nav-item:hover{color:#fff;background:rgba(255,255,255,.1)}.nav-item--active{box-shadow:inset 3px 0 #e1a354}.sidebar-foot{display:flex;align-items:center;gap:10px;margin-top:auto;padding:16px 8px 0;border-top:1px solid rgba(255,255,255,.12)}.sidebar-foot i{width:8px;height:8px;border-radius:50%;background:#75c9a6}.sidebar-foot strong,.sidebar-foot small{display:block;font-size:11px}.sidebar-foot small{margin-top:3px;color:#82b5af}.main{margin-left:232px;padding:0 34px 48px}.topbar{display:flex;align-items:center;justify-content:space-between;min-height:96px}.topbar p{margin:0 0 6px;color:#7b8e8d;font-size:12px}.topbar h1{margin:0;font:600 28px STZhongsong,"Songti SC",serif}.top-meta{display:flex;align-items:center;gap:16px;color:#718684;font-size:11px}.top-meta b{display:grid;place-items:center;width:38px;height:38px;border-radius:50%;color:#fff;background:#bd7f34}.intro{display:flex;align-items:center;justify-content:space-between;min-height:150px;border:1px solid #d7e0de;border-radius:9px;padding:25px 34px;background:#fff}.intro small,.panel-head small{color:#bd7f34;font-size:10px;font-weight:700;letter-spacing:.13em}.intro h2{margin:9px 0 7px;font:600 25px STZhongsong,"Songti SC",serif}.intro p{margin:0;color:#718482;font-size:13px}.intro-total{min-width:180px;border-left:1px solid #dce5e3;padding-left:32px}.intro-total strong,.intro-total span{display:block}.intro-total strong{font:36px Bahnschrift}.intro-total span{color:#899b99;font-size:11px}.cards{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin:16px 0}.cards article{display:flex;align-items:center;gap:14px;border:1px solid #d7e0de;border-radius:8px;padding:17px;background:#fff}.cards article>i{display:grid;place-items:center;width:38px;height:38px;border-radius:50%;color:#17615d;background:#e5f1ef;font:normal 16px STZhongsong}.cards span,.cards strong,.cards small{display:block}.cards span{color:#718482;font-size:11px}.cards strong{margin:3px 0;font:23px Bahnschrift}.cards small{color:#9aa8a7;font-size:9px}.panel{border:1px solid #d7e0de;border-radius:9px;padding:22px;background:#fff}.panel-head{display:flex;justify-content:space-between}.panel-head h3{margin:5px 0 0;font-size:18px}.panel-head>span{color:#8a9a98;font-size:11px}.filters{display:grid;grid-template-columns:1.4fr repeat(3,.75fr) auto;gap:9px;margin:20px 0 15px}.filters label{position:relative}.filters label i{position:absolute;left:12px;top:8px;color:#78908e;font-style:normal}.filters input,.filters select{width:100%;height:38px;border:1px solid #d3dddb;border-radius:6px;padding:0 10px;color:#344e4f;background:#f9fbfa}.filters input{padding-left:35px}.filters button,.pager button,td button{border:1px solid #bdcbc8;border-radius:5px;color:#17615d;background:#fff;cursor:pointer}.filters>button{padding:0 15px}.table-wrap{overflow-x:auto;border-top:1px solid #e3e9e8}.faded{opacity:.5}table{width:100%;border-collapse:collapse;white-space:nowrap}th{height:42px;color:#899a98;font-size:10px;text-align:left}td{height:62px;border-top:1px solid #edf1f0;color:#627674;font-size:11px}tbody tr{cursor:pointer}tbody tr:hover{background:#f4f9f8}.club-name{display:flex;align-items:center;gap:10px}.club-name>i{display:grid;place-items:center;width:34px;height:34px;border-radius:7px;color:#fff;background:#397c77;font:normal 15px STZhongsong}.club-name strong,.club-name small,td>strong,td>small{display:block}.club-name strong,td>strong{color:#294746}.club-name small,td>small{margin-top:4px;color:#90a09e;font-size:9px}td>b{font:16px Bahnschrift;color:#294746}.accent{color:#b97428}td button{padding:6px 9px}.pager{display:flex;justify-content:space-between;border-top:1px solid #e6ecea;padding-top:15px;color:#869694;font-size:10px}.pager div{display:flex;gap:5px}.pager button{height:30px;padding:0 11px}.pager b{display:grid;place-items:center;width:30px;border-radius:5px;color:#fff;background:#17615d}.error{padding:30px;color:#925e28}.mask{position:fixed;inset:0;z-index:30;background:rgba(11,42,42,.38);backdrop-filter:blur(2px)}.drawer{position:absolute;inset:0 0 0 auto;width:min(560px,100%);overflow-y:auto;padding:34px;background:#f8fbfa;box-shadow:-18px 0 50px rgba(10,45,44,.14)}.close{position:absolute;right:22px;top:18px;border:0;color:#718482;background:none;font-size:27px}.loading{display:grid;place-items:center;height:60vh}.profile{display:flex;align-items:center;gap:16px;border-bottom:1px solid #dbe4e2;padding:14px 0 23px}.profile>i{display:grid;place-items:center;width:65px;height:65px;border-radius:12px;color:#fff;background:#17615d;font:normal 26px STZhongsong}.profile small{color:#b5752d;font-size:9px}.profile h2{margin:5px 0 3px;font:600 25px STZhongsong}.profile p,.description{margin:0;color:#768987;font-size:11px}.description{padding:16px 2px;line-height:1.7}.facts{display:grid;grid-template-columns:1fr 1fr;gap:1px;margin:0 0 16px;border:1px solid #dce5e3;background:#dce5e3}.facts div{padding:11px 13px;background:#fff}.facts dt{color:#92a19f;font-size:9px}.facts dd{margin:4px 0 0;font-size:11px}.metrics{display:grid;grid-template-columns:repeat(4,1fr);padding:16px 8px;border-radius:7px;color:#fff;background:#174f4d}.metrics div{text-align:center}.metrics div+div{border-left:1px solid rgba(255,255,255,.15)}.metrics b,.metrics span{display:block}.metrics b{font:20px Bahnschrift}.metrics span{margin-top:4px;color:#acd0cb;font-size:9px}.drawer-section{margin-top:24px}.drawer-section>header{display:flex;justify-content:space-between;border-bottom:1px solid #dae4e2;padding-bottom:9px}.drawer-section h3{margin:0;font-size:14px}.drawer-section header span{color:#8d9d9b;font-size:9px}.roles>div{display:grid;grid-template-columns:65px 1fr 28px;align-items:center;gap:10px;padding:9px 0;font-size:10px}.roles>div>div{height:6px;border-radius:3px;background:#e0e9e7}.roles i{display:block;height:100%;border-radius:3px;background:#4c988e}.activities>div,.members>div{display:flex;align-items:center;gap:10px;border-bottom:1px solid #e5ebe9;padding:10px 2px}.activities time{width:45px;color:#a46c2c;font:10px Bahnschrift}.activities div>div,.members div>div{min-width:0;flex:1}.activities b,.activities small,.members b,.members small{display:block}.activities b,.members b{overflow:hidden;color:#344e4d;font-size:11px;text-overflow:ellipsis;white-space:nowrap}.activities small,.members small{margin-top:3px;color:#91a09e;font-size:9px}.activities>div>span,.members>div>span{color:#3b7771;font-size:9px}.members>div>i{display:grid;place-items:center;width:28px;height:28px;border-radius:50%;color:#fff;background:#529188;font-style:normal;font-size:10px}@media(max-width:1100px){.cards{grid-template-columns:1fr 1fr}.filters{grid-template-columns:1fr 1fr 1fr}}@media(max-width:760px){.sidebar{position:static;width:auto}.sidebar nav,.sidebar-foot{display:none}.main{margin-left:0;padding:0 14px 30px}.intro-total{display:none}.cards{grid-template-columns:1fr 1fr}.filters{grid-template-columns:1fr}}@media(max-width:440px){.cards{grid-template-columns:1fr}}
+.panel-actions{display:flex;align-items:center;gap:13px}.panel-actions button,.profile-actions button{border:1px solid #17615d;border-radius:5px;padding:8px 12px;color:#fff;background:#17615d;cursor:pointer;font-size:10px}.profile-actions{display:flex;gap:8px;margin-top:16px}.profile-actions .danger{border-color:#b77b69;color:#8b4e3e;background:#fff}
+.member-editor{display:grid;grid-template-columns:1fr 1fr 1fr auto;gap:6px;margin-top:12px}.member-editor input,.member-editor select{height:34px;border:1px solid #cedad7;border-radius:5px;padding:0 7px;color:#385553;background:#fff;font-size:9px}.member-editor button{border:0;border-radius:5px;padding:0 9px;color:#fff;background:#17615d;font-size:9px}
 </style>

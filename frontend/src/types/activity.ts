@@ -37,6 +37,7 @@ export interface ActivityListResponse {
     categories: Array<{ id: number; name: string }>
     clubs: Array<{ id: number; name: string }>
     campuses: Array<{ id: number; name: string }>
+    venues: Array<{ id: number; name: string; campus_id: number }>
   }
 }
 
