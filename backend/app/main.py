@@ -3,7 +3,9 @@ from uuid import uuid4
 from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 
+from app.agent.hermes import HermesClient
 from app.api.activities import router as activities_router
+from app.api.agent_runtime import router as agent_runtime_router
 from app.api.auth import router as auth_router
 from app.api.clubs import router as clubs_router
 from app.api.dictionaries import router as dictionaries_router
@@ -21,6 +23,7 @@ def create_app(settings: Settings | None = None) -> FastAPI:
     app = FastAPI(title=resolved_settings.app_name)
     app.state.settings = resolved_settings
     app.state.engine = create_engine_from_url(resolved_settings.database_url)
+    app.state.hermes_client = HermesClient.from_settings(resolved_settings)
     install_exception_handlers(app)
 
     @app.middleware("http")
@@ -38,6 +41,7 @@ def create_app(settings: Settings | None = None) -> FastAPI:
         allow_headers=["*"],
     )
     app.include_router(activities_router, prefix="/api")
+    app.include_router(agent_runtime_router, prefix="/api")
     app.include_router(auth_router, prefix="/api")
     app.include_router(clubs_router, prefix="/api")
     app.include_router(dictionaries_router, prefix="/api")

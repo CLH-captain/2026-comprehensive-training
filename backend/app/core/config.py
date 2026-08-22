@@ -20,8 +20,19 @@ class Settings(BaseSettings):
     initial_admin_password: str = ""
     seed_user_password: str = ""
 
-    hermes_base_url: str = "http://127.0.0.1:8642/v1"
-    hermes_api_key: str
+    hermes_base_url: str = "http://127.0.0.1:9120"
+    hermes_api_key: str = ""
+    hermes_executable: str = (
+        r"C:\Users\陈立洪\AppData\Roaming\cn.org.hermesagent.desktop\runtime"
+        r"\versions\0.19.0-cn.7\hermes-agent-cn-runtime-win32-x64.exe"
+    )
+    hermes_provider: str = "custom:127-0-0-1-11434"
+    hermes_home: str = (
+        r"C:\Users\陈立洪\AppData\Roaming\cn.org.hermesagent.desktop\runtime"
+        r"\hermes-home"
+    )
+    hermes_working_directory: str = ".."
+    hermes_timeout_seconds: float = 180.0
     agent_internal_key: str
 
     local_llm_base_url: str = "http://127.0.0.1:11434/v1"

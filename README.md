@@ -2,7 +2,7 @@
 
 本项目使用 Vue 3、FastAPI、MySQL 与 Hermes Agent 构建校园社团活动数据管理、统计分析和自然语言查询平台。所有业务数据均为固定种子生成的仿真数据；所有统计数字以 MySQL 为唯一来源。
 
-当前可展示版本已完成本机 MySQL 配置、18 张业务表、固定种子仿真数据、Statistics Service 与 Vue 数据总览。Hermes、完整 CRUD 和权限功能按路线图继续开发。
+当前系统已完成本机 MySQL、18 张业务表、固定种子仿真数据、Statistics Service、JWT/RBAC、完整业务管理与 Analytics，并已打通 FastAPI → Hermes → Ollama → 本地 Qwen 基础对话链路。Hermes Tool 和 Agent Web 闭环按路线图继续开发。
 
 ## 本机环境
 
@@ -21,7 +21,7 @@
 powershell -ExecutionPolicy Bypass -File scripts\check-environment.ps1
 ```
 
-Hermes 与 Ollama 在 Phase 7 前可以不启动；检查脚本会将其端口显示为警告而不是失败。
+基础管理页面不依赖 Hermes 与 Ollama；使用 Agent 功能前需启动 AI 服务。
 
 ## 准备 MySQL
 
@@ -53,7 +53,7 @@ python -c "import secrets; print(secrets.token_urlsafe(48))"
 
 - `DATABASE_URL`、`TEST_DATABASE_URL` 中的 MySQL 密码
 - `INITIAL_ADMIN_PASSWORD`、`SEED_USER_PASSWORD`
-- `HERMES_API_KEY`
+- `HERMES_EXECUTABLE`、`HERMES_HOME`（按本机 Hermes Desktop Runtime 实际版本填写）
 - `DEEPSEEK_API_KEY`
 
 `.env` 已被 Git 忽略。不要把真实密码或 Key 写入 `.env.example`、README、测试或提交记录。
@@ -74,6 +74,16 @@ powershell -ExecutionPolicy Bypass -File scripts\stop-demo.ps1
 
 Dashboard 展示的数据实时来自本机 MySQL，可按学期和校区筛选。
 
+## 启动本地 AI 服务
+
+在 PowerShell 7 中运行：
+
+```powershell
+.\scripts\start-ai-services.ps1
+.\scripts\check-ai-services.ps1
+```
+
+检查结果应显示 Ollama `ready`、模型 `qwen3.5-4b-64k:latest`、`context_length: 65536` 和 Hermes Runtime 版本。Hermes Desktop 0.7.0 当前内置 Runtime 0.19.0，Dashboard 实际地址为 `http://127.0.0.1:9120`。后端使用 Runtime 官方 `--oneshot` 入口，不依赖桌面内部 WebSocket 协议。
 ## 启动后端
 
 首次安装：
@@ -142,4 +152,5 @@ scripts/        Windows 本机辅助脚本
 - `8000` 被占用：停止旧 FastAPI 进程，不要随意改变前端代理端口。
 - `5173` 被占用：停止旧 Vite 进程，保持 `FRONTEND_ORIGIN` 与实际地址一致。
 - 前端显示无法连接后端：先访问 `/api/health`，再检查 Vite 代理与 FastAPI 日志。
-- Hermes/Ollama 端口未监听：Phase 1～6 不阻塞；Phase 7 会进行专项联调。
+- Agent 显示 Runtime 或模型不可用：运行 `.\scripts\start-ai-services.ps1`，再用 `.\scripts\check-ai-services.ps1` 检查。
+- Hermes 提示 Unknown provider：确认 `.env` 的 `HERMES_HOME` 指向 Desktop Runtime 的 `hermes-home`。

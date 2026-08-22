@@ -59,3 +59,9 @@ pnpm build
 - 完成学生、社团、成员、活动、报名和签到操作界面，以及 7 张 Analytics 图表。
 - 使用苏州工学院官网子川桥、东南图书馆照片，来源记录见 `frontend/src/assets/campus/SOURCES.md`。
 - 课程项目明确不做移动端适配；生产级限流、复杂审计不在范围内。
+## Phase 7 验收记录
+
+- 核验 Hermes Agent CN Desktop 0.7.0 内置 Runtime 0.19.0，Dashboard 实际监听 `127.0.0.1:9120`。
+- 核验 Ollama 模型 `qwen3.5-4b-64k:latest`，`num_ctx` 为 65536。
+- 新增 Hermes CLI Adapter 及 8 项专项测试，覆盖认证、参数限制、成功、超时、缺失、失败与空响应。
+- 真实链路 FastAPI → Hermes → Ollama → Qwen 返回“接口连接成功”。

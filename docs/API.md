@@ -96,3 +96,13 @@ Authorization: Bearer <access_token>
 ```
 
 每个响应还会带 `X-Request-ID` 响应头。课程项目保留必要的 JWT、角色和数据范围校验，不引入生产部署所需的限流、复杂审计和多节点令牌基础设施。
+## Agent Runtime
+
+以下接口需要 Bearer JWT，用于 Phase 7 运行环境检查和基础对话验收：
+
+| 方法 | 路径 | 说明 |
+| --- | --- | --- |
+| GET | `/api/agent/runtime` | 返回 Hermes Runtime、Dashboard、Ollama 和本地模型状态 |
+| POST | `/api/agent/runtime/chat` | 通过 Hermes CLI Adapter 调用本地 Qwen；请求体为 `{"message":"..."}` |
+
+基础对话返回 `content`、`model` 和固定的 `adapter: hermes_cli`。模型和 Provider 由服务端配置，客户端不能覆盖。Runtime 缺失、启动失败、超时、模型连接失败和空回答分别返回统一错误码。

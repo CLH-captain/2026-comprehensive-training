@@ -45,9 +45,9 @@
 
 ## Phase 7：Hermes 与本地 Qwen
 
-- [ ] 核验 Hermes Agent CN Desktop 0.7.0 的实际 API/插件接口。
-- [ ] 启动 Ollama 并验证 `qwen3.5-4b-64k:latest` 的 65536 上下文配置。
-- [ ] 建立 FastAPI Hermes Adapter 并完成基础对话测试。
+- [x] 核验 Hermes Agent CN Desktop 0.7.0 的实际 API/插件接口。
+- [x] 启动 Ollama 并验证 `qwen3.5-4b-64k:latest` 的 65536 上下文配置。
+- [x] 建立 FastAPI Hermes Adapter 并完成基础对话测试。
 
 ## Phase 8：Hermes Plugin 与内部 Tool API
 
