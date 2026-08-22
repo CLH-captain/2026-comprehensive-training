@@ -1,0 +1,305 @@
+:root {
+  color: #183238;
+  background: #edf3f2;
+  font-family: "Microsoft YaHei UI", "PingFang SC", sans-serif;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  --ink: #183238;
+  --lake: #0b625f;
+  --jade: #378d82;
+  --mist: #d9e8e5;
+  --paper: #f8fbfa;
+  --amber: #c98632;
+  --line: #c7d5d2;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  min-width: 320px;
+  min-height: 100vh;
+  margin: 0;
+}
+
+button,
+input,
+textarea,
+select {
+  font: inherit;
+}
+
+button:focus-visible,
+a:focus-visible {
+  outline: 3px solid rgb(201 134 50 / 35%);
+  outline-offset: 3px;
+}
+
+.setup-page {
+  display: grid;
+  grid-template-columns: minmax(0, 1.15fr) minmax(360px, 0.85fr);
+  min-height: 100vh;
+}
+
+.campus-panel {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  overflow: hidden;
+  padding: clamp(32px, 5vw, 76px);
+  color: #f5fbf9;
+  background: var(--lake);
+}
+
+.campus-panel::after {
+  position: absolute;
+  right: -14%;
+  bottom: -24%;
+  width: min(48vw, 680px);
+  aspect-ratio: 1;
+  border: 1px solid rgb(255 255 255 / 14%);
+  border-radius: 50%;
+  box-shadow:
+    0 0 0 56px rgb(255 255 255 / 4%),
+    0 0 0 128px rgb(255 255 255 / 3%);
+  content: "";
+}
+
+.brand-mark {
+  width: fit-content;
+  border-block: 1px solid rgb(255 255 255 / 45%);
+  padding: 6px 1px;
+  font-family: Bahnschrift, sans-serif;
+  font-size: 0.83rem;
+  letter-spacing: 0.22em;
+}
+
+.campus-copy {
+  position: relative;
+  z-index: 1;
+  max-width: 670px;
+  margin-block: auto;
+}
+
+.eyebrow,
+.status-kicker,
+.section-index {
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+}
+
+.eyebrow {
+  margin: 0 0 24px;
+  color: #b8d9d3;
+}
+
+h1,
+h2,
+p {
+  margin-top: 0;
+}
+
+h1 {
+  margin-bottom: 28px;
+  font-family: STZhongsong, "Songti SC", serif;
+  font-size: clamp(3rem, 6.1vw, 6.8rem);
+  font-weight: 500;
+  line-height: 1.08;
+  letter-spacing: -0.045em;
+}
+
+.intro {
+  max-width: 32rem;
+  margin-bottom: 0;
+  color: #d5e9e5;
+  font-size: clamp(1rem, 1.5vw, 1.2rem);
+  line-height: 1.85;
+}
+
+.campus-line {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 14px;
+  font-size: 0.76rem;
+  letter-spacing: 0.08em;
+}
+
+.campus-track {
+  height: 1px;
+  background: rgb(255 255 255 / 38%);
+}
+
+.campus-node {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.campus-node::before {
+  width: 7px;
+  height: 7px;
+  border: 2px solid #f5fbf9;
+  border-radius: 50%;
+  content: "";
+}
+
+.status-panel {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: clamp(32px, 5vw, 72px);
+  background: var(--paper);
+}
+
+.status-heading,
+.status-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.section-index {
+  color: #6e8586;
+}
+
+.status-dot {
+  width: 11px;
+  height: 11px;
+  border-radius: 50%;
+  background: #829393;
+}
+
+.status-dot--loading {
+  animation: pulse 1.4s ease-in-out infinite;
+}
+
+.status-dot--connected {
+  background: var(--jade);
+  box-shadow: 0 0 0 5px rgb(55 141 130 / 12%);
+}
+
+.status-dot--error {
+  background: var(--amber);
+  box-shadow: 0 0 0 5px rgb(201 134 50 / 13%);
+}
+
+.status-body {
+  max-width: 520px;
+  margin-block: auto;
+  padding-block: 72px;
+}
+
+.status-kicker {
+  margin-bottom: 18px;
+  color: var(--amber);
+}
+
+h2 {
+  margin-bottom: 20px;
+  color: var(--ink);
+  font-family: STZhongsong, "Songti SC", serif;
+  font-size: clamp(2rem, 3.5vw, 3.5rem);
+  font-weight: 500;
+  line-height: 1.2;
+}
+
+.status-detail {
+  max-width: 34rem;
+  color: #637777;
+  line-height: 1.85;
+}
+
+.service-facts {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1px;
+  margin: 38px 0 0;
+  background: var(--line);
+  border: 1px solid var(--line);
+}
+
+.service-facts div {
+  padding: 20px;
+  background: var(--paper);
+}
+
+.service-facts dt {
+  margin-bottom: 8px;
+  color: #728585;
+  font-size: 0.72rem;
+  letter-spacing: 0.1em;
+}
+
+.service-facts dd {
+  margin: 0;
+  font-family: Bahnschrift, Consolas, monospace;
+  font-size: 0.95rem;
+}
+
+.retry-button {
+  min-height: 46px;
+  margin-top: 16px;
+  border: 1px solid var(--lake);
+  padding: 0 24px;
+  color: #fff;
+  background: var(--lake);
+  cursor: pointer;
+  transition: background-color 160ms ease, transform 160ms ease;
+}
+
+.retry-button:hover {
+  background: #084e4c;
+  transform: translateY(-1px);
+}
+
+.status-footer {
+  border-top: 1px solid var(--line);
+  padding-top: 18px;
+  color: #7a8d8d;
+  font-family: Bahnschrift, sans-serif;
+  font-size: 0.68rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+@keyframes pulse {
+  50% {
+    opacity: 0.35;
+  }
+}
+
+@media (max-width: 860px) {
+  .setup-page {
+    grid-template-columns: 1fr;
+  }
+
+  .campus-panel {
+    min-height: 58vh;
+  }
+
+  .status-panel {
+    min-height: 42vh;
+  }
+
+  .campus-copy {
+    margin-block: 56px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
