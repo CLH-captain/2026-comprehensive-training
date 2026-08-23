@@ -1,3 +1,5 @@
+import logging
+from time import perf_counter
 from uuid import uuid4
 
 from fastapi import FastAPI, Request
@@ -18,10 +20,12 @@ from app.api.statistics import router as statistics_router
 from app.api.students import router as students_router
 from app.core.config import Settings, get_settings
 from app.core.errors import install_exception_handlers
+from app.core.logging import configure_logging
 from app.db.session import create_engine_from_url
 
 
 def create_app(settings: Settings | None = None) -> FastAPI:
+    configure_logging()
     resolved_settings = settings or get_settings()
     app = FastAPI(title=resolved_settings.app_name)
     app.state.settings = resolved_settings
@@ -33,8 +37,19 @@ def create_app(settings: Settings | None = None) -> FastAPI:
     @app.middleware("http")
     async def request_context(request: Request, call_next):
         request.state.request_id = request.headers.get("X-Request-ID") or uuid4().hex
+        started_at = perf_counter()
         response = await call_next(request)
         response.headers["X-Request-ID"] = request.state.request_id
+        logging.getLogger("szut.request").info(
+            "request.completed",
+            extra={
+                "request_id": request.state.request_id,
+                "method": request.method,
+                "path": request.url.path,
+                "status_code": response.status_code,
+                "duration_ms": round((perf_counter() - started_at) * 1000, 2),
+            },
+        )
         return response
 
     app.add_middleware(

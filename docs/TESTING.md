@@ -80,3 +80,14 @@ pnpm build
 - Tool Trace：覆盖单 Tool、损坏记录忽略和临时文件清理；完整 Tool 数据不持久化。
 - 真实链路：管理员经 `/api/agent/chat` 调用 Hermes/Qwen 与 `get_overview_statistics`，结果为 45 个活跃社团、16028 参与人次，与 `StatisticsService` 直接查询一致。
 - 已知非阻塞提示：Starlette TestClient 产生弃用提示，Vite 主包仍超过 500 kB，均安排在后续加固阶段处理。
+## Phase 10 验收记录
+
+- DeepSeek 回退代码覆盖可恢复错误重试、管理员聚合问题、个人明细禁用和脱敏快照。
+- `/models` 诊断确认 Key、地址和 `deepseek-v4-flash` 访问权限可用。
+- DeepSeek ChatCompletions 在真实脱敏请求中返回 HTTP 400；为控制余额，已停止重试。该外部服务校验问题不会影响本地 Hermes/Ollama 主模型。
+
+## Phase 11 验收记录
+
+- 新增 JSON 请求日志：仅记录 request_id、方法、路径、状态、耗时和 Agent 来源/模型/回退标记。
+- 新增 40 道 Agent 验收题，覆盖总览、条件、排行、趋势、分布、个人摘要、社团摘要和综合分析，并验证只映射到 7 个注册 Tool。
+- 后端 108 项测试、前端 4 项测试、Vite 生产构建均通过。

@@ -1,3 +1,4 @@
+import logging
 from typing import Annotated
 
 from fastapi import APIRouter, Path, Request
@@ -105,6 +106,15 @@ def chat(payload: AgentChatRequest, request: Request, user: AuthenticatedUser) -
     reply = _agent_reply(request, payload, user, pending.prompt, context_token)
     with request.app.state.engine.begin() as connection:
         AgentService(connection).complete_chat(pending.conversation_id, reply)
+    logging.getLogger("szut.agent").info(
+        "agent.completed",
+        extra={
+            "request_id": request.state.request_id,
+            "source": reply.adapter,
+            "model": reply.model,
+            "fallback": reply.adapter == "deepseek_fallback",
+        },
+    )
     return {
         "conversation_id": pending.conversation_id,
         "answer": reply.content,

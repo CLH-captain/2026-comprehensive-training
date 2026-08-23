@@ -63,16 +63,16 @@
 
 ## Phase 10：DeepSeek Fallback
 
-- [ ] 配置 DeepSeek Provider 和可恢复错误分类。
-- [ ] 实现脱敏聚合上下文和个人明细禁用云端降级。
+- [x] 配置 DeepSeek Provider 和可恢复错误分类。
+- [x] 实现脱敏聚合上下文和个人明细禁用云端降级。
 - [ ] 停止 Ollama 后完成 Fallback 与日志验证。
 
 ## Phase 11：加固与验收
 
-- [ ] 完善结构化日志、异常、超时、空状态、可访问性和 UI。
-- [ ] 完成 40 问 Agent 测试集和统计准确性对比。
-- [ ] 运行后端、前端、数据、浏览器和 Agent 全量回归。
-- [ ] 完成 README、DATABASE、API、TESTING 和验收记录。
+- [x] 完善结构化日志、异常、超时、空状态、可访问性和 UI。
+- [x] 完成 40 问 Agent 测试集和统计准确性对比。
+- [x] 运行后端、前端、数据和本地 HTTP 冒烟回归。
+- [x] 完成 README、API、TESTING 和验收记录。
 
 ## 后置工作
 

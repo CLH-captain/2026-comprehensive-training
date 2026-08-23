@@ -132,4 +132,4 @@ Authorization: Bearer <access_token>
 | DELETE | `/api/agent/conversations/{id}` | 删除本人会话和消息 |
 | POST | `/api/agent/chat` | 创建/续接会话并调用 Hermes 数据 Agent |
 
-Chat 请求包含 `message`、可选 `conversation_id`，以及可选的 `context.term_id`、`context.campus_id`。响应包含最终 `answer`、`model_used`、Tool 调用摘要、首次成功 Tool 的结构化 `data`，以及后端生成的 `bar`、`line` 或 `pie` 可视化规格。客户端不能提交模型名、任意 JavaScript 或身份字段。
+Chat 请求包含 `message`、可选 `conversation_id`，以及可选的 `context.term_id`、`context.campus_id`。响应包含最终 `answer`、`model_used`、Tool 调用摘要、首次成功 Tool 的结构化 `data`，以及后端生成的 `bar`、`line` 或 `pie` 可视化规格。客户端不能提交模型名、任意 JavaScript 或身份字段。 当本地 Hermes/Ollama 出现可恢复失败时，服务只对管理员的非个人聚合问题重试本地模型后尝试 DeepSeek；响应中的 `fallback_used` 会标识备用来源。
