@@ -1,0 +1,112 @@
+Secure MCP Filesystem Server running on stdio
+Client does not support MCP Roots, using allowed directories set from server args: [ 'D:\\文档\\实训2026\\社团活动参与统计Agent\\szut-club-agent' ]
+Ignoring invalid configuration option passed to Connection: acquireTimeout. This is currently a warning, but in future versions of MySQL2, an error will be thrown if you pass an invalid configuration option to a Connection
+Ignoring invalid configuration option passed to Connection: timeout. This is currently a warning, but in future versions of MySQL2, an error will be thrown if you pass an invalid configuration option to a Connection
+Knowledge Graph MCP Server running on stdio
+Sequential Thinking MCP Server running on stdio
+[
+  {
+    "name": "filesystem",
+    "status": "ok",
+    "tools": [
+      "read_file",
+      "read_text_file",
+      "read_media_file",
+      "read_multiple_files",
+      "write_file",
+      "edit_file",
+      "create_directory",
+      "list_directory",
+      "list_directory_with_sizes",
+      "directory_tree",
+      "move_file",
+      "search_files",
+      "get_file_info",
+      "list_allowed_directories"
+    ]
+  },
+  {
+    "name": "fetch",
+    "status": "ok",
+    "tools": [
+      "fetch"
+    ]
+  },
+  {
+    "name": "playwright",
+    "status": "ok",
+    "tools": [
+      "browser_close",
+      "browser_resize",
+      "browser_console_messages",
+      "browser_handle_dialog",
+      "browser_evaluate",
+      "browser_file_upload",
+      "browser_drop",
+      "browser_find",
+      "browser_fill_form",
+      "browser_press_key",
+      "browser_type",
+      "browser_navigate",
+      "browser_navigate_back",
+      "browser_network_requests",
+      "browser_network_request",
+      "browser_run_code_unsafe",
+      "browser_take_screenshot",
+      "browser_snapshot",
+      "browser_click",
+      "browser_drag",
+      "browser_hover",
+      "browser_select_option",
+      "browser_tabs",
+      "browser_wait_for"
+    ]
+  },
+  {
+    "name": "git",
+    "status": "ok",
+    "tools": [
+      "git_status",
+      "git_diff_unstaged",
+      "git_diff_staged",
+      "git_diff",
+      "git_commit",
+      "git_add",
+      "git_reset",
+      "git_log",
+      "git_create_branch",
+      "git_checkout",
+      "git_show",
+      "git_branch"
+    ]
+  },
+  {
+    "name": "mysql",
+    "status": "ok",
+    "tools": [
+      "mysql_query"
+    ]
+  },
+  {
+    "name": "memory",
+    "status": "ok",
+    "tools": [
+      "create_entities",
+      "create_relations",
+      "add_observations",
+      "delete_entities",
+      "delete_observations",
+      "delete_relations",
+      "read_graph",
+      "search_nodes",
+      "open_nodes"
+    ]
+  },
+  {
+    "name": "sequential_thinking",
+    "status": "ok",
+    "tools": [
+      "sequentialthinking"
+    ]
+  }
+]

@@ -1,0 +1,29 @@
+- main [ref=f3e3]:
+  - generic [ref=f3e4]:
+    - generic [ref=f3e5]:
+      - generic [ref=f3e6]: S
+      - generic [ref=f3e7]:
+        - strong [ref=f3e8]: SZUT
+        - generic [ref=f3e9]: 苏州工学院
+    - generic [ref=f3e10]:
+      - text: CLUB ACTIVITY DATA CENTER
+      - heading "让校园里的 每一次参与都有迹可循" [level=1] [ref=f3e11]: 让校园里的每一次参与都有迹可循
+      - paragraph [ref=f3e12]: 社团、活动、报名与签到统一管理，以真实数据理解校园活力。
+    - generic [ref=f3e13]:
+      - generic [ref=f3e14]: 苏州 · 常熟
+      - generic [ref=f3e16]: 2025—2026
+  - generic [ref=f3e18]:
+    - text: 01 / ACCOUNT
+    - heading "登录校园活动数据中心" [level=2] [ref=f3e19]
+    - paragraph [ref=f3e20]: 使用管理员、社团负责人或学生演示账号进入系统。
+    - generic [ref=f3e21]:
+      - generic [ref=f3e22]: 用户名
+      - textbox "用户名" [ref=f3e23]: admin
+    - generic [ref=f3e24]:
+      - generic [ref=f3e25]: 密码
+      - textbox "密码" [ref=f3e26]
+    - button "进入系统" [ref=f3e27] [cursor=pointer]
+    - generic [ref=f3e28]:
+      - strong [ref=f3e29]: 课程演示账号
+      - generic [ref=f3e30]: admin · club_manager_demo · student_demo
+      - generic [ref=f3e31]: 密码使用本机 .env 配置，不写入页面。
