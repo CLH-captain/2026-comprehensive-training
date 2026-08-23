@@ -42,7 +42,7 @@ def test_deepseek_client_sends_only_aggregate_snapshot() -> None:
 
     assert reply.model == "deepseek-test"
     assert reply.adapter == "deepseek_fallback"
-    assert captured["url"] == "https://api.deepseek.example/v1/chat/completions"
+    assert captured["url"] == "https://api.deepseek.example/chat/completions"
     body = captured["json"]
     assert isinstance(body, dict)
     user_text = body["messages"][1]["content"]

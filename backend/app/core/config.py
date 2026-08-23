@@ -40,7 +40,7 @@ class Settings(BaseSettings):
     local_llm_base_url: str = "http://127.0.0.1:11434/v1"
     local_llm_model: str = "qwen3.5-4b-64k:latest"
 
-    deepseek_base_url: str = "https://api.deepseek.com/v1"
+    deepseek_base_url: str = "https://api.deepseek.com"
     deepseek_api_key: str
     deepseek_model: str = "DeepSeek-v4-flash"
 

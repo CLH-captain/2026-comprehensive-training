@@ -25,7 +25,7 @@ class DeepSeekClient:
         timeout_seconds: float = 30.0,
         post: HttpPost = httpx.post,
     ) -> None:
-        self.base_url = base_url.rstrip("/")
+        self.base_url = base_url.rstrip("/").removesuffix("/v1")
         self.api_key = api_key
         self.model = model
         self.timeout_seconds = timeout_seconds
