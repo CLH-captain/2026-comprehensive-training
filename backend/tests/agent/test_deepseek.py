@@ -45,6 +45,8 @@ def test_deepseek_client_sends_only_aggregate_snapshot() -> None:
     assert captured["url"] == "https://api.deepseek.example/chat/completions"
     body = captured["json"]
     assert isinstance(body, dict)
+    assert body["thinking"] == {"type": "disabled"}
+    assert body["stream"] is False
     user_text = body["messages"][1]["content"]
     assert "16028" in user_text
     assert "test-key" not in user_text

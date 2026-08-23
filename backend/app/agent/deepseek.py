@@ -47,6 +47,8 @@ class DeepSeekClient:
         payload = {
             "model": self.model,
             "temperature": 0.2,
+            "thinking": {"type": "disabled"},
+            "stream": False,
             "messages": [
                 {
                     "role": "system",
