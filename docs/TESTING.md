@@ -72,3 +72,11 @@ pnpm build
 - 统计一致性：overview、两类排行、月度趋势、分布、学生摘要、社团摘要及活动类别过滤均复用 `StatisticsService`；内部 Tool 与公开 Statistics API 逐值一致。
 - Hermes Runtime：用户插件 `szut-club-statistics` 0.1.0 已安装并启用，新会话成功加载 `szut_club_statistics` Toolset。
 - 真实插件链路：项目插件携带短期 Context Token 调用 FastAPI overview Tool，返回 `success=true`、45 个活跃社团和既有统计基准。
+## Phase 9 验收记录
+
+- 后端全量：100 项测试通过；本次应用、插件和 Phase 9 测试 Ruff 全部通过。
+- 前端：既有 4 项 Vitest 回归通过，TypeScript 检查与 Vite 生产构建通过。
+- 会话闭环：覆盖创建、历史加载、删除、用户隔离、委托令牌、消息持久化、Tool 摘要和受控 Chart Specification。
+- Tool Trace：覆盖单 Tool、损坏记录忽略和临时文件清理；完整 Tool 数据不持久化。
+- 真实链路：管理员经 `/api/agent/chat` 调用 Hermes/Qwen 与 `get_overview_statistics`，结果为 45 个活跃社团、16028 参与人次，与 `StatisticsService` 直接查询一致。
+- 已知非阻塞提示：Starlette TestClient 产生弃用提示，Vite 主包仍超过 500 kB，均安排在后续加固阶段处理。

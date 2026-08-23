@@ -3,20 +3,37 @@ from __future__ import annotations
 from collections.abc import Iterator
 
 import pytest
-from fastapi.testclient import TestClient
-from sqlalchemy import create_engine, text
-
 from app.core.config import Settings, get_settings
 from app.core.security import hash_password
 from app.db.session import assert_test_database_url
 from app.main import create_app
+from fastapi.testclient import TestClient
+from sqlalchemy import create_engine, text
 
 TEST_USER_SQL = "'phase5_admin','phase5_disabled','phase5_manager','phase5_student'"
 
 
 def cleanup_users(connection) -> None:
-    connection.execute(text(f"DELETE FROM revoked_tokens WHERE user_id IN (SELECT id FROM users WHERE username IN ({TEST_USER_SQL}))"))
-    connection.execute(text(f"DELETE FROM user_club_roles WHERE user_id IN (SELECT id FROM users WHERE username IN ({TEST_USER_SQL}))"))
+    connection.execute(
+        text(
+            f"DELETE FROM agent_messages WHERE conversation_id IN (SELECT id FROM agent_conversations WHERE user_id IN (SELECT id FROM users WHERE username IN ({TEST_USER_SQL})))"
+        )
+    )
+    connection.execute(
+        text(
+            f"DELETE FROM agent_conversations WHERE user_id IN (SELECT id FROM users WHERE username IN ({TEST_USER_SQL}))"
+        )
+    )
+    connection.execute(
+        text(
+            f"DELETE FROM revoked_tokens WHERE user_id IN (SELECT id FROM users WHERE username IN ({TEST_USER_SQL}))"
+        )
+    )
+    connection.execute(
+        text(
+            f"DELETE FROM user_club_roles WHERE user_id IN (SELECT id FROM users WHERE username IN ({TEST_USER_SQL}))"
+        )
+    )
     connection.execute(text(f"DELETE FROM users WHERE username IN ({TEST_USER_SQL})"))
 
 
@@ -37,7 +54,9 @@ def auth_client() -> Iterator[TestClient]:
     engine = create_engine(base.test_database_url)
     with engine.begin() as connection:
         cleanup_users(connection)
-        student_id = connection.scalar(text("SELECT id FROM students ORDER BY id LIMIT 1"))
+        student_id = connection.scalar(
+            text("SELECT id FROM students ORDER BY id LIMIT 1")
+        )
         club_id = connection.scalar(text("SELECT id FROM clubs ORDER BY id LIMIT 1"))
         connection.execute(
             text(

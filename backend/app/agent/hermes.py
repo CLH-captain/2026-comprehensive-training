@@ -1,13 +1,15 @@
 from __future__ import annotations
 
+import json
 import os
 import subprocess
+import tempfile
 from collections.abc import Callable, Sequence
 from pathlib import Path
 
 import httpx
 
-from app.agent.schemas import HermesReply, RuntimeStatus
+from app.agent.schemas import HermesReply, HermesToolCall, RuntimeStatus
 from app.core.config import Settings
 from app.core.errors import AppError
 
@@ -30,6 +32,7 @@ class HermesClient:
         ollama_url: str,
         agent_internal_key: str = "",
         agent_tool_base_url: str = "http://127.0.0.1:8000",
+        toolsets: str = "szut_club_statistics",
         runner: ProcessRunner = subprocess.run,
     ) -> None:
         self.executable = Path(executable)
@@ -42,6 +45,7 @@ class HermesClient:
         self.ollama_url = ollama_url.removesuffix("/v1").rstrip("/")
         self.agent_internal_key = agent_internal_key
         self.agent_tool_base_url = agent_tool_base_url.rstrip("/")
+        self.toolsets = toolsets
         self._runner = runner
 
     @classmethod
@@ -57,6 +61,7 @@ class HermesClient:
             ollama_url=settings.local_llm_base_url,
             agent_internal_key=settings.agent_internal_key,
             agent_tool_base_url=settings.agent_tool_base_url,
+            toolsets=settings.hermes_toolsets,
         )
 
     def command(self, prompt: str) -> Sequence[str]:
@@ -68,6 +73,8 @@ class HermesClient:
             self.provider,
             "--model",
             self.model,
+            "--toolsets",
+            self.toolsets,
             "--ignore-rules",
         )
 
@@ -76,8 +83,34 @@ class HermesClient:
             raise AppError(
                 503, "HERMES_RUNTIME_MISSING", "Hermes Runtime is not available"
             )
+        with tempfile.NamedTemporaryFile(
+            prefix="szut-agent-", suffix=".jsonl", delete=False
+        ) as trace_stream:
+            trace_path = Path(trace_stream.name)
         try:
-            result = self._runner(
+            result = self._run(prompt, context_token, trace_path)
+            content = result.stdout.strip()
+            if result.returncode != 0:
+                raise AppError(
+                    503, "HERMES_FAILED", self._safe_failure_message(result.stderr)
+                )
+            if not content:
+                raise AppError(
+                    502, "HERMES_EMPTY_RESPONSE", "Hermes returned an empty response"
+                )
+            return HermesReply(
+                content=content,
+                model=self.model,
+                tool_calls=self._read_trace(trace_path),
+            )
+        finally:
+            trace_path.unlink(missing_ok=True)
+
+    def _run(
+        self, prompt: str, context_token: str | None, trace_path: Path
+    ) -> subprocess.CompletedProcess[str]:
+        try:
+            return self._runner(
                 self.command(prompt),
                 cwd=self.working_directory,
                 capture_output=True,
@@ -89,6 +122,7 @@ class HermesClient:
                     "HERMES_HOME": str(self.hermes_home),
                     "SZUT_API_BASE_URL": self.agent_tool_base_url,
                     "AGENT_INTERNAL_KEY": self.agent_internal_key,
+                    "SZUT_AGENT_TRACE_FILE": str(trace_path),
                     **(
                         {"SZUT_AGENT_CONTEXT_TOKEN": context_token}
                         if context_token
@@ -108,16 +142,28 @@ class HermesClient:
                 503, "HERMES_START_FAILED", "Hermes Runtime could not be started"
             ) from exc
 
-        content = result.stdout.strip()
-        if result.returncode != 0:
-            raise AppError(
-                503, "HERMES_FAILED", self._safe_failure_message(result.stderr)
-            )
-        if not content:
-            raise AppError(
-                502, "HERMES_EMPTY_RESPONSE", "Hermes returned an empty response"
-            )
-        return HermesReply(content=content, model=self.model)
+    @staticmethod
+    def _read_trace(trace_path: Path) -> tuple[HermesToolCall, ...]:
+        calls: list[HermesToolCall] = []
+        for line in trace_path.read_text(encoding="utf-8").splitlines():
+            try:
+                item = json.loads(line)
+                if not isinstance(item.get("name"), str) or not isinstance(
+                    item.get("arguments"), dict
+                ):
+                    continue
+                calls.append(
+                    HermesToolCall(
+                        name=item["name"],
+                        arguments=item["arguments"],
+                        data=item.get("data"),
+                        success=bool(item.get("success", True)),
+                        error=item.get("error"),
+                    )
+                )
+            except (AttributeError, json.JSONDecodeError, TypeError):
+                continue
+        return tuple(calls)
 
     def status(self) -> RuntimeStatus:
         runtime_available = self.executable.is_file()

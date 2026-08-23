@@ -33,6 +33,7 @@ class Settings(BaseSettings):
     )
     hermes_working_directory: str = ".."
     hermes_timeout_seconds: float = 180.0
+    hermes_toolsets: str = "szut_club_statistics"
     agent_internal_key: str
     agent_tool_base_url: str = "http://127.0.0.1:8000"
 

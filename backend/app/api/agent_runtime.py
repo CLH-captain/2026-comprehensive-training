@@ -21,6 +21,6 @@ def runtime_status(request: Request, user: AuthenticatedUser) -> dict:
 @router.post("/chat")
 def runtime_chat(
     payload: RuntimeChatRequest, request: Request, user: AuthenticatedUser
-) -> dict[str, str]:
+) -> dict[str, object]:
     del user
     return request.app.state.hermes_client.chat(payload.message).as_dict()

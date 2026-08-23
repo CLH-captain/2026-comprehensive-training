@@ -90,7 +90,7 @@ onMounted(loadActivities)
 
 <template>
   <div class="workspace">
-    <aside class="sidebar"><div class="brand"><span>S</span><div><strong>SZUT</strong><small>校园活动数据中心</small></div></div><nav><RouterLink to="/"><i>▦</i>数据总览</RouterLink><RouterLink to="/students"><i>◎</i>学生管理</RouterLink><RouterLink to="/clubs"><i>◇</i>社团管理</RouterLink><RouterLink class="active" to="/activities"><i>□</i>活动管理</RouterLink><RouterLink to="/participation"><i>✓</i>报名签到</RouterLink><RouterLink to="/analytics"><i>⌁</i>统计分析</RouterLink><a><i>✦</i>智能分析</a></nav><footer><b></b><div><strong>系统运行正常</strong><small>活动数据已连接</small></div></footer></aside>
+    <aside class="sidebar"><div class="brand"><span>S</span><div><strong>SZUT</strong><small>校园活动数据中心</small></div></div><nav><RouterLink to="/"><i>▦</i>数据总览</RouterLink><RouterLink to="/students"><i>◎</i>学生管理</RouterLink><RouterLink to="/clubs"><i>◇</i>社团管理</RouterLink><RouterLink class="active" to="/activities"><i>□</i>活动管理</RouterLink><RouterLink to="/participation"><i>✓</i>报名签到</RouterLink><RouterLink to="/analytics"><i>⌁</i>统计分析</RouterLink><RouterLink to="/agent"><i>✦</i>智能分析</RouterLink></nav><footer><b></b><div><strong>系统运行正常</strong><small>活动数据已连接</small></div></footer></aside>
     <main class="main">
       <header class="topbar"><div><p>校园活动数据 / 活动全周期</p><h1>活动管理</h1></div><div class="admin"><span>2025—2026 学年</span><b>管</b></div></header>
       <section class="intro"><div><small>ACTIVITY OPERATIONS</small><h2>从发布到签到，掌握每场活动进程</h2><p>统一查看活动时间、场地容量、报名情况与真实到场表现。</p></div><div><strong>{{ formatter.format(data?.total ?? 0) }}</strong><span>当前筛选活动</span></div></section>

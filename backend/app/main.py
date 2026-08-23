@@ -5,6 +5,7 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from app.agent.hermes import HermesClient
 from app.api.activities import router as activities_router
+from app.api.agent import router as agent_router
 from app.api.agent_runtime import router as agent_runtime_router
 from app.api.auth import router as auth_router
 from app.api.clubs import router as clubs_router
@@ -42,6 +43,7 @@ def create_app(settings: Settings | None = None) -> FastAPI:
         allow_headers=["*"],
     )
     app.include_router(activities_router, prefix="/api")
+    app.include_router(agent_router, prefix="/api")
     app.include_router(agent_runtime_router, prefix="/api")
     app.include_router(auth_router, prefix="/api")
     app.include_router(clubs_router, prefix="/api")

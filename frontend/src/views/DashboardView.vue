@@ -93,7 +93,7 @@ onMounted(loadDashboard)
         <a class="nav-item" href="/clubs"><span>◇</span>社团管理</a>
         <a class="nav-item" href="/activities"><span>□</span>活动管理</a>
         <RouterLink class="nav-item" to="/analytics"><span>⌁</span>统计分析</RouterLink>
-        <a class="nav-item" href="#agent"><span>✦</span>智能分析</a>
+        <RouterLink class="nav-item" to="/agent"><span>✦</span>智能分析</RouterLink>
       </nav>
       <div class="sidebar-foot"><span class="online-dot"></span><div><strong>系统运行正常</strong><small>MySQL 数据已连接</small></div></div>
     </aside>

@@ -147,7 +147,7 @@ onMounted(loadStudents)
         <RouterLink class="nav-item" to="/clubs"><span>◇</span>社团管理</RouterLink>
         <RouterLink class="nav-item" to="/activities"><span>□</span>活动管理</RouterLink><RouterLink class="nav-item" to="/participation"><span>✓</span>报名签到</RouterLink>
         <RouterLink class="nav-item" to="/analytics"><span>⌁</span>统计分析</RouterLink>
-        <span class="nav-item nav-item--disabled"><span>✦</span>智能分析</span>
+        <RouterLink class="nav-item" to="/agent"><span>✦</span>智能分析</RouterLink>
       </nav>
       <div class="sidebar-foot"><span class="online-dot"></span><div><strong>系统运行正常</strong><small>学生档案已连接</small></div></div>
     </aside>

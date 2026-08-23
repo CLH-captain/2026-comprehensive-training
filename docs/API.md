@@ -121,3 +121,15 @@ Authorization: Bearer <access_token>
 | `get_club_summary` | `/api/internal/agent-tools/club-summary` |
 
 管理员可查询全部；社团负责人查询聚合和社团摘要时必须指定其绑定社团；学生个人摘要始终强制使用当前学生本人。参数模型禁止未知字段，排行上限为 50，趋势粒度固定为月，活动排行支持 `category_id`。
+## Agent Web API
+
+以下接口需要 Bearer JWT，会话始终按当前用户隔离：
+
+| 方法 | 路径 | 说明 |
+| --- | --- | --- |
+| GET | `/api/agent/conversations` | 按更新时间返回本人会话与消息数 |
+| GET | `/api/agent/conversations/{id}/messages` | 返回本人会话消息及脱敏 Tool 摘要 |
+| DELETE | `/api/agent/conversations/{id}` | 删除本人会话和消息 |
+| POST | `/api/agent/chat` | 创建/续接会话并调用 Hermes 数据 Agent |
+
+Chat 请求包含 `message`、可选 `conversation_id`，以及可选的 `context.term_id`、`context.campus_id`。响应包含最终 `answer`、`model_used`、Tool 调用摘要、首次成功 Tool 的结构化 `data`，以及后端生成的 `bar`、`line` 或 `pie` 可视化规格。客户端不能提交模型名、任意 JavaScript 或身份字段。

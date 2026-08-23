@@ -57,9 +57,9 @@
 
 ## Phase 9：Agent Web 闭环
 
-- [ ] 实现会话、消息和 `/api/agent/chat`。
-- [ ] 实现 Agent 前端、快捷问题、结构化数据和 Chart Specification。
-- [ ] 完成 Vue → FastAPI → Hermes → Tool → MySQL 端到端测试。
+- [x] 实现会话、消息和 `/api/agent/chat`。
+- [x] 实现 Agent 前端、快捷问题、结构化数据和 Chart Specification。
+- [x] 完成 Vue → FastAPI → Hermes → Tool → MySQL 端到端测试。
 
 ## Phase 10：DeepSeek Fallback
 

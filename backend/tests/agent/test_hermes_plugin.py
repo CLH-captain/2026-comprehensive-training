@@ -40,13 +40,19 @@ def test_plugin_registers_exactly_seven_strict_tools(plugin: ModuleType) -> None
         assert item["schema"]["parameters"]["additionalProperties"] is False
 
 
-def test_plugin_schema_constrains_dimensions_metrics_and_limits(plugin: ModuleType) -> None:
+def test_plugin_schema_constrains_dimensions_metrics_and_limits(
+    plugin: ModuleType,
+) -> None:
     schemas = plugin.TOOL_SCHEMAS
     distribution = schemas["get_distribution_statistics"]["parameters"]
     club_ranking = schemas["get_club_ranking"]["parameters"]["properties"]
     activity_ranking = schemas["get_activity_ranking"]["parameters"]["properties"]
     assert distribution["required"] == ["dimension"]
-    assert distribution["properties"]["dimension"]["enum"] == ["category", "college", "campus"]
+    assert distribution["properties"]["dimension"]["enum"] == [
+        "category",
+        "college",
+        "campus",
+    ]
     assert club_ranking["metric"]["enum"] == ["activity_score"]
     assert activity_ranking["metric"]["enum"] == ["participant_times"]
     assert activity_ranking["limit"]["maximum"] == 50
@@ -60,7 +66,9 @@ def test_client_requires_internal_credentials(plugin: ModuleType, monkeypatch) -
         client_module.ToolClient.from_env()
 
 
-def test_tool_handler_returns_structured_success(plugin: ModuleType, monkeypatch) -> None:
+def test_tool_handler_returns_structured_success(
+    plugin: ModuleType, monkeypatch
+) -> None:
     tools = sys.modules[f"{plugin.__name__}.tools"]
 
     class Client:
@@ -72,3 +80,26 @@ def test_tool_handler_returns_structured_success(plugin: ModuleType, monkeypatch
     monkeypatch.setattr(tools.ToolClient, "from_env", lambda: Client())
     result = json.loads(tools.invoke("get_overview_statistics", {"term_id": 2}))
     assert result == {"success": True, "data": {"activity_count": 10}}
+
+
+def test_tool_handler_writes_invocation_trace(
+    plugin: ModuleType, monkeypatch, tmp_path
+) -> None:
+    tools = sys.modules[f"{plugin.__name__}.tools"]
+    trace_path = tmp_path / "tool-trace.jsonl"
+
+    class Client:
+        def call(self, endpoint, payload):
+            return {"active_clubs": 45}
+
+    monkeypatch.setenv("SZUT_AGENT_TRACE_FILE", str(trace_path))
+    monkeypatch.setattr(tools.ToolClient, "from_env", lambda: Client())
+    tools.invoke("get_overview_statistics", {"campus_id": 1})
+
+    trace = json.loads(trace_path.read_text(encoding="utf-8"))
+    assert trace == {
+        "name": "get_overview_statistics",
+        "arguments": {"campus_id": 1},
+        "data": {"active_clubs": 45},
+        "success": True,
+    }

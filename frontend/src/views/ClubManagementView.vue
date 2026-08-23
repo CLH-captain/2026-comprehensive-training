@@ -117,7 +117,7 @@ onMounted(loadClubs)
         <RouterLink class="nav-item" to="/"><span>▦</span>数据总览</RouterLink>
         <RouterLink class="nav-item" to="/students"><span>◎</span>学生管理</RouterLink>
         <RouterLink class="nav-item nav-item--active" to="/clubs"><span>◇</span>社团管理</RouterLink>
-        <RouterLink class="nav-item" to="/activities"><span>□</span>活动管理</RouterLink><RouterLink class="nav-item" to="/participation"><span>✓</span>报名签到</RouterLink><RouterLink class="nav-item" to="/analytics"><span>⌁</span>统计分析</RouterLink><span class="nav-item"><span>✦</span>智能分析</span>
+        <RouterLink class="nav-item" to="/activities"><span>□</span>活动管理</RouterLink><RouterLink class="nav-item" to="/participation"><span>✓</span>报名签到</RouterLink><RouterLink class="nav-item" to="/analytics"><span>⌁</span>统计分析</RouterLink><RouterLink class="nav-item" to="/agent"><span>✦</span>智能分析</RouterLink>
       </nav>
       <div class="sidebar-foot"><i></i><div><strong>系统运行正常</strong><small>社团数据已连接</small></div></div>
     </aside>

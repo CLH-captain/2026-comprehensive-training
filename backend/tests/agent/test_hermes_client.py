@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import subprocess
+from pathlib import Path
 
 import pytest
 from app.agent.hermes import HermesClient
@@ -55,6 +56,39 @@ def test_chat_passes_agent_context_only_through_child_environment(tmp_path) -> N
     assert "context-test-token" not in client.command("统计")
     assert captured["env"]["SZUT_AGENT_CONTEXT_TOKEN"] == "context-test-token"
     assert captured["env"]["AGENT_INTERNAL_KEY"] == "internal-test-key"
+
+
+def test_chat_reads_tool_trace_and_removes_temporary_file(tmp_path) -> None:
+    captured_trace_path = None
+
+    def runner(command, **kwargs):
+        nonlocal captured_trace_path
+        captured_trace_path = Path(kwargs["env"]["SZUT_AGENT_TRACE_FILE"])
+        captured_trace_path.write_text(
+            '{"name":"statistics_overview","arguments":{"term_id":1},'
+            '"data":{"student_count":100},"success":true}\n',
+            encoding="utf-8",
+        )
+        return subprocess.CompletedProcess(command, 0, "统计完成", "")
+
+    reply = make_client(tmp_path, runner).chat("统计概览")
+
+    assert len(reply.tool_calls) == 1
+    assert reply.tool_calls[0].name == "statistics_overview"
+    assert reply.tool_calls[0].data == {"student_count": 100}
+    assert captured_trace_path is not None
+    assert not captured_trace_path.exists()
+
+
+def test_chat_ignores_damaged_trace_records(tmp_path) -> None:
+    def runner(command, **kwargs):
+        Path(kwargs["env"]["SZUT_AGENT_TRACE_FILE"]).write_text(
+            'not-json\n{"name":42,"arguments":{}}\n', encoding="utf-8"
+        )
+        return subprocess.CompletedProcess(command, 0, "完成", "")
+
+    assert make_client(tmp_path, runner).chat("统计").tool_calls == ()
+
 
 def test_chat_maps_timeout_to_safe_app_error(tmp_path) -> None:
     def runner(command, **kwargs):

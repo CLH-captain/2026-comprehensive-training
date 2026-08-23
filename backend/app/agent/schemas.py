@@ -2,12 +2,22 @@ from dataclasses import asdict, dataclass
 
 
 @dataclass(frozen=True)
+class HermesToolCall:
+    name: str
+    arguments: dict[str, object]
+    data: object | None = None
+    success: bool = True
+    error: str | None = None
+
+
+@dataclass(frozen=True)
 class HermesReply:
     content: str
     model: str
+    tool_calls: tuple[HermesToolCall, ...] = ()
     adapter: str = "hermes_cli"
 
-    def as_dict(self) -> dict[str, str]:
+    def as_dict(self) -> dict[str, object]:
         return asdict(self)
 
 

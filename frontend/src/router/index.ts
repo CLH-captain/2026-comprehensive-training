@@ -1,6 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router'
 
 import ActivityManagementView from '@/views/ActivityManagementView.vue'
+import AgentView from '@/views/AgentView.vue'
 import AnalyticsView from '@/views/AnalyticsView.vue'
 import ClubManagementView from '@/views/ClubManagementView.vue'
 import DashboardView from '@/views/DashboardView.vue'
@@ -19,6 +20,7 @@ export const router = createRouter({
     { path: '/activities', name: 'activities', component: ActivityManagementView },
     { path: '/participation', name: 'participation', component: ParticipationManagementView },
     { path: '/analytics', name: 'analytics', component: AnalyticsView },
+    { path: '/agent', name: 'agent', component: AgentView },
   ],
 })
 

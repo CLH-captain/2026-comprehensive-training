@@ -28,9 +28,12 @@ def login(client: TestClient) -> dict[str, str]:
 
 def test_runtime_endpoints_require_authentication(auth_client: TestClient) -> None:
     assert auth_client.get("/api/agent/runtime").status_code == 401
-    assert auth_client.post(
-        "/api/agent/runtime/chat", json={"message": "hello"}
-    ).status_code == 401
+    assert (
+        auth_client.post(
+            "/api/agent/runtime/chat", json={"message": "hello"}
+        ).status_code
+        == 401
+    )
 
 
 def test_runtime_status_and_basic_chat(auth_client: TestClient) -> None:
@@ -51,6 +54,7 @@ def test_runtime_status_and_basic_chat(auth_client: TestClient) -> None:
     assert chat.json() == {
         "content": "收到：你好",
         "model": "qwen-test:latest",
+        "tool_calls": [],
         "adapter": "hermes_cli",
     }
 
