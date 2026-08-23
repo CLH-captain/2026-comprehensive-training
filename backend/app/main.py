@@ -3,6 +3,7 @@ from uuid import uuid4
 from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 
+from app.agent.deepseek import DeepSeekClient
 from app.agent.hermes import HermesClient
 from app.api.activities import router as activities_router
 from app.api.agent import router as agent_router
@@ -26,6 +27,7 @@ def create_app(settings: Settings | None = None) -> FastAPI:
     app.state.settings = resolved_settings
     app.state.engine = create_engine_from_url(resolved_settings.database_url)
     app.state.hermes_client = HermesClient.from_settings(resolved_settings)
+    app.state.deepseek_client = DeepSeekClient.from_settings(resolved_settings)
     install_exception_handlers(app)
 
     @app.middleware("http")

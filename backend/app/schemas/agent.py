@@ -44,6 +44,7 @@ class AgentChatResponse(BaseModel):
     conversation_id: int
     answer: str
     model_used: str
+    fallback_used: bool = False
     tool_calls: list[AgentToolCallView]
     data: Any | None = None
     visualization: AgentVisualization | None = None

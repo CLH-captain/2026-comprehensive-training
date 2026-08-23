@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from app.agent.schemas import HermesReply, HermesToolCall
+from app.core.errors import AppError
 from app.core.security import decode_agent_context_token
 from fastapi.testclient import TestClient
 
@@ -109,3 +110,70 @@ def test_agent_chat_rejects_unknown_fields(auth_client: TestClient) -> None:
 
     assert response.status_code == 422
     assert response.json()["code"] == "VALIDATION_ERROR"
+
+
+def test_admin_uses_deepseek_fallback_after_two_local_failures(
+    auth_client: TestClient,
+) -> None:
+    class FailedHermes:
+        calls = 0
+
+        def chat(self, prompt: str, context_token: str | None = None) -> HermesReply:
+            self.calls += 1
+            raise AppError(503, "HERMES_START_FAILED", "local unavailable")
+
+    class DeepSeek:
+        calls = 0
+        snapshot = None
+
+        def chat(self, *, question: str, snapshot: dict) -> HermesReply:
+            self.calls += 1
+            self.snapshot = snapshot
+            return HermesReply(
+                content="云端聚合分析完成。",
+                model="deepseek-test",
+                adapter="deepseek_fallback",
+            )
+
+    hermes = FailedHermes()
+    deepseek = DeepSeek()
+    auth_client.app.state.hermes_client = hermes
+    auth_client.app.state.deepseek_client = deepseek
+
+    response = auth_client.post(
+        "/api/agent/chat",
+        headers=login(auth_client, "phase5_admin"),
+        json={"message": "本学期社团参与情况如何？", "context": {"term_id": 1}},
+    )
+
+    assert response.status_code == 200
+    assert response.json()["model_used"] == "deepseek-test"
+    assert response.json()["fallback_used"] is True
+    assert hermes.calls == 2
+    assert deepseek.calls == 1
+    assert deepseek.snapshot["overview"]["active_clubs"] == 45
+
+
+def test_non_admin_never_uses_cloud_fallback(auth_client: TestClient) -> None:
+    class FailedHermes:
+        def chat(self, prompt: str, context_token: str | None = None) -> HermesReply:
+            raise AppError(503, "HERMES_START_FAILED", "local unavailable")
+
+    class DeepSeek:
+        calls = 0
+
+        def chat(self, *, question: str, snapshot: dict) -> HermesReply:
+            self.calls += 1
+            return HermesReply(content="should not run", model="deepseek-test")
+
+    deepseek = DeepSeek()
+    auth_client.app.state.hermes_client = FailedHermes()
+    auth_client.app.state.deepseek_client = deepseek
+    response = auth_client.post(
+        "/api/agent/chat",
+        headers=login(auth_client, "phase5_manager"),
+        json={"message": "本学期社团参与情况如何？"},
+    )
+
+    assert response.status_code == 503
+    assert deepseek.calls == 0
