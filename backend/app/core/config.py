@@ -34,6 +34,7 @@ class Settings(BaseSettings):
     hermes_working_directory: str = ".."
     hermes_timeout_seconds: float = 180.0
     agent_internal_key: str
+    agent_tool_base_url: str = "http://127.0.0.1:8000"
 
     local_llm_base_url: str = "http://127.0.0.1:11434/v1"
     local_llm_model: str = "qwen3.5-4b-64k:latest"

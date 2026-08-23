@@ -2,7 +2,7 @@
 
 本项目使用 Vue 3、FastAPI、MySQL 与 Hermes Agent 构建校园社团活动数据管理、统计分析和自然语言查询平台。所有业务数据均为固定种子生成的仿真数据；所有统计数字以 MySQL 为唯一来源。
 
-当前系统已完成本机 MySQL、18 张业务表、固定种子仿真数据、Statistics Service、JWT/RBAC、完整业务管理与 Analytics，并已打通 FastAPI → Hermes → Ollama → 本地 Qwen 基础对话链路。Hermes Tool 和 Agent Web 闭环按路线图继续开发。
+当前系统已完成本机 MySQL、18 张业务表、固定种子仿真数据、Statistics Service、JWT/RBAC、完整业务管理与 Analytics，并已打通 FastAPI → Hermes → Ollama → 本地 Qwen 基础对话及 7 个统计 Tool。Agent Web 闭环按路线图继续开发。
 
 ## 本机环境
 
@@ -84,6 +84,14 @@ Dashboard 展示的数据实时来自本机 MySQL，可按学期和校区筛选�
 ```
 
 检查结果应显示 Ollama `ready`、模型 `qwen3.5-4b-64k:latest`、`context_length: 65536` 和 Hermes Runtime 版本。Hermes Desktop 0.7.0 当前内置 Runtime 0.19.0，Dashboard 实际地址为 `http://127.0.0.1:9120`。后端使用 Runtime 官方 `--oneshot` 入口，不依赖桌面内部 WebSocket 协议。
+安装或更新项目级 Hermes 插件：
+
+```powershell
+.\scripts\install-hermes-plugin.ps1
+hermes plugins enable szut-club-statistics
+```
+
+插件从环境读取 `SZUT_API_BASE_URL`、`AGENT_INTERNAL_KEY` 和每次调用的短期 `SZUT_AGENT_CONTEXT_TOKEN`，不保存数据库密码或用户 JWT。
 ## 启动后端
 
 首次安装：

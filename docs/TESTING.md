@@ -65,3 +65,10 @@ pnpm build
 - 核验 Ollama 模型 `qwen3.5-4b-64k:latest`，`num_ctx` 为 65536。
 - 新增 Hermes CLI Adapter 及 8 项专项测试，覆盖认证、参数限制、成功、超时、缺失、失败与空响应。
 - 真实链路 FastAPI → Hermes → Ollama → Qwen 返回“接口连接成功”。
+## Phase 8 验收记录
+
+- 后端全量：96 项测试通过；应用、插件与 Phase 8 测试 Ruff 全部通过。
+- 令牌与权限：覆盖双重凭据、过期/用途错误 Context Token、账户回查、管理员、社团负责人和学生本人范围。
+- 统计一致性：overview、两类排行、月度趋势、分布、学生摘要、社团摘要及活动类别过滤均复用 `StatisticsService`；内部 Tool 与公开 Statistics API 逐值一致。
+- Hermes Runtime：用户插件 `szut-club-statistics` 0.1.0 已安装并启用，新会话成功加载 `szut_club_statistics` Toolset。
+- 真实插件链路：项目插件携带短期 Context Token 调用 FastAPI overview Tool，返回 `success=true`、45 个活跃社团和既有统计基准。

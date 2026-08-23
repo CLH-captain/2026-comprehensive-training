@@ -17,11 +17,18 @@ class StatisticsFilter:
     campus_id: int | None = None
     college_id: int | None = None
     club_id: int | None = None
+    activity_category_id: int | None = None
     date_from: date | datetime | None = None
     date_to: date | datetime | None = None
 
     def __post_init__(self) -> None:
-        for field_name in ("term_id", "campus_id", "college_id", "club_id"):
+        for field_name in (
+            "term_id",
+            "campus_id",
+            "college_id",
+            "club_id",
+            "activity_category_id",
+        ):
             value = getattr(self, field_name)
             if value is not None and value < 1:
                 raise ValueError(f"{field_name} must be positive")
@@ -54,6 +61,11 @@ class StatisticsFilter:
             ("term_id", self.term_id, f"{activity_alias}.term_id = :term_id"),
             ("campus_id", self.campus_id, f"{venue_alias}.campus_id = :campus_id"),
             ("club_id", self.club_id, f"{activity_alias}.club_id = :club_id"),
+            (
+                "activity_category_id",
+                self.activity_category_id,
+                f"{activity_alias}.category_id = :activity_category_id",
+            ),
         )
         for name, value, clause in fields:
             if value is not None:

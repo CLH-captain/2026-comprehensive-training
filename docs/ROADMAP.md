@@ -51,9 +51,9 @@
 
 ## Phase 8：Hermes Plugin 与内部 Tool API
 
-- [ ] 实现 Agent Context Token 和 `X-Agent-Internal-Key` 验证。
-- [ ] 实现 7 个 Internal Tool API，全部复用 Statistics/Service。
-- [ ] 实现项目级 Hermes Plugin、严格 Tool Schema 和权限测试。
+- [x] 实现 Agent Context Token 和 `X-Agent-Internal-Key` 验证。
+- [x] 实现 7 个 Internal Tool API，全部复用 Statistics/Service。
+- [x] 实现项目级 Hermes Plugin、严格 Tool Schema 和权限测试。
 
 ## Phase 9：Agent Web 闭环
 

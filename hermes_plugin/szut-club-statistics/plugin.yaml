@@ -1,0 +1,15 @@
+name: szut-club-statistics
+version: 0.1.0
+description: "苏州工学院校园社团活动统计工具，通过本机 FastAPI 查询统一 StatisticsService。"
+author: SZUT Course Project
+kind: standalone
+platforms:
+  - windows
+provides_tools:
+  - get_overview_statistics
+  - get_club_ranking
+  - get_activity_ranking
+  - get_participation_trend
+  - get_distribution_statistics
+  - get_student_summary
+  - get_club_summary

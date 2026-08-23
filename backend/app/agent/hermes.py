@@ -28,6 +28,8 @@ class HermesClient:
         timeout_seconds: float,
         dashboard_url: str,
         ollama_url: str,
+        agent_internal_key: str = "",
+        agent_tool_base_url: str = "http://127.0.0.1:8000",
         runner: ProcessRunner = subprocess.run,
     ) -> None:
         self.executable = Path(executable)
@@ -38,6 +40,8 @@ class HermesClient:
         self.timeout_seconds = timeout_seconds
         self.dashboard_url = dashboard_url.rstrip("/")
         self.ollama_url = ollama_url.removesuffix("/v1").rstrip("/")
+        self.agent_internal_key = agent_internal_key
+        self.agent_tool_base_url = agent_tool_base_url.rstrip("/")
         self._runner = runner
 
     @classmethod
@@ -51,6 +55,8 @@ class HermesClient:
             timeout_seconds=settings.hermes_timeout_seconds,
             dashboard_url=settings.hermes_base_url,
             ollama_url=settings.local_llm_base_url,
+            agent_internal_key=settings.agent_internal_key,
+            agent_tool_base_url=settings.agent_tool_base_url,
         )
 
     def command(self, prompt: str) -> Sequence[str]:
@@ -65,7 +71,7 @@ class HermesClient:
             "--ignore-rules",
         )
 
-    def chat(self, prompt: str) -> HermesReply:
+    def chat(self, prompt: str, context_token: str | None = None) -> HermesReply:
         if not self.executable.is_file():
             raise AppError(
                 503, "HERMES_RUNTIME_MISSING", "Hermes Runtime is not available"
@@ -78,7 +84,17 @@ class HermesClient:
                 text=True,
                 encoding="utf-8",
                 errors="replace",
-                env={**os.environ, "HERMES_HOME": str(self.hermes_home)},
+                env={
+                    **os.environ,
+                    "HERMES_HOME": str(self.hermes_home),
+                    "SZUT_API_BASE_URL": self.agent_tool_base_url,
+                    "AGENT_INTERNAL_KEY": self.agent_internal_key,
+                    **(
+                        {"SZUT_AGENT_CONTEXT_TOKEN": context_token}
+                        if context_token
+                        else {}
+                    ),
+                },
                 timeout=self.timeout_seconds,
                 check=False,
                 shell=False,

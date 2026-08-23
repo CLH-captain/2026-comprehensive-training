@@ -94,6 +94,7 @@ def club_summary(
         campus_id=base_filters.campus_id,
         college_id=base_filters.college_id,
         club_id=None,
+        activity_category_id=base_filters.activity_category_id,
         date_from=base_filters.date_from,
         date_to=base_filters.date_to,
     )

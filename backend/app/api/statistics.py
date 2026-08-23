@@ -16,6 +16,9 @@ def statistics_filter(
     campus_id: Annotated[int | None, Query(ge=1)] = None,
     college_id: Annotated[int | None, Query(ge=1)] = None,
     filter_club_id: Annotated[int | None, Query(alias="club_id", ge=1)] = None,
+    activity_category_id: Annotated[
+        int | None, Query(alias="category_id", ge=1)
+    ] = None,
     date_from: date | None = None,
     date_to: date | None = None,
 ) -> StatisticsFilter:
@@ -25,6 +28,7 @@ def statistics_filter(
             campus_id=campus_id,
             college_id=college_id,
             club_id=filter_club_id,
+            activity_category_id=activity_category_id,
             date_from=date_from,
             date_to=date_to,
         )

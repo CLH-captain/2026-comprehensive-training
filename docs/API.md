@@ -73,7 +73,7 @@ Authorization: Bearer <access_token>
 - `/api/statistics/students/{id}`
 - `/api/statistics/clubs/{id}`
 
-统计接口支持 `term_id`、`campus_id`、`college_id`、`club_id`、`date_from` 和 `date_to` 过滤，统一复用 `StatisticsService`。
+统计接口支持 `term_id`、`campus_id`、`college_id`、`club_id`、`category_id`、`date_from` 和 `date_to` 过滤，统一复用 `StatisticsService`。
 
 ## 响应约定
 
@@ -106,3 +106,18 @@ Authorization: Bearer <access_token>
 | POST | `/api/agent/runtime/chat` | 通过 Hermes CLI Adapter 调用本地 Qwen；请求体为 `{"message":"..."}` |
 
 基础对话返回 `content`、`model` 和固定的 `adapter: hermes_cli`。模型和 Provider 由服务端配置，客户端不能覆盖。Runtime 缺失、启动失败、超时、模型连接失败和空回答分别返回统一错误码。
+## Internal Agent Tools
+
+这 7 个接口仅供本机 Hermes 项目插件调用，不面向浏览器。每次请求必须同时携带 `X-Agent-Internal-Key` 和 5 分钟有效的 `X-Agent-Context-Token`。后端按 Token 的用户 ID 回查账户和权限，模型参数不能覆盖身份。
+
+| Tool | POST 路径 |
+| --- | --- |
+| `get_overview_statistics` | `/api/internal/agent-tools/overview` |
+| `get_club_ranking` | `/api/internal/agent-tools/club-ranking` |
+| `get_activity_ranking` | `/api/internal/agent-tools/activity-ranking` |
+| `get_participation_trend` | `/api/internal/agent-tools/trend` |
+| `get_distribution_statistics` | `/api/internal/agent-tools/distribution` |
+| `get_student_summary` | `/api/internal/agent-tools/student-summary` |
+| `get_club_summary` | `/api/internal/agent-tools/club-summary` |
+
+管理员可查询全部；社团负责人查询聚合和社团摘要时必须指定其绑定社团；学生个人摘要始终强制使用当前学生本人。参数模型禁止未知字段，排行上限为 50，趋势粒度固定为月，活动排行支持 `category_id`。

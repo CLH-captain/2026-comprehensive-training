@@ -37,10 +37,17 @@ def get_agent_scope(
             raise AppError(401, "ACCOUNT_UNAVAILABLE", "Account is unavailable")
         club_ids = None
         if user["role"] != "admin":
-            club_ids = frozenset(
-                connection.scalars(
-                    text("SELECT club_id FROM user_club_roles WHERE user_id = :id AND role = 'manager'"),
-                    {"id": claims.user_id},
-                ).all()
-            ) if user["role"] == "club_manager" else frozenset()
+            club_ids = (
+                frozenset(
+                    connection.scalars(
+                        text(
+                            "SELECT club_id FROM user_club_roles "
+                            "WHERE user_id = :id AND role = 'manager'"
+                        ),
+                        {"id": claims.user_id},
+                    ).all()
+                )
+                if user["role"] == "club_manager"
+                else frozenset()
+            )
     return AccessScope(user["id"], user["role"], user["student_id"], club_ids)

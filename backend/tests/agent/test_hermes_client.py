@@ -40,6 +40,22 @@ def test_chat_uses_argument_array_and_returns_clean_reply(tmp_path) -> None:
     assert captured["kwargs"]["shell"] is False
 
 
+def test_chat_passes_agent_context_only_through_child_environment(tmp_path) -> None:
+    captured = {}
+
+    def runner(command, **kwargs):
+        captured.update(kwargs)
+        return subprocess.CompletedProcess(command, 0, "完成", "")
+
+    client = make_client(tmp_path, runner)
+    client.agent_internal_key = "internal-test-key"
+    client.agent_tool_base_url = "http://127.0.0.1:8000"
+    client.chat("统计", context_token="context-test-token")
+
+    assert "context-test-token" not in client.command("统计")
+    assert captured["env"]["SZUT_AGENT_CONTEXT_TOKEN"] == "context-test-token"
+    assert captured["env"]["AGENT_INTERNAL_KEY"] == "internal-test-key"
+
 def test_chat_maps_timeout_to_safe_app_error(tmp_path) -> None:
     def runner(command, **kwargs):
         raise subprocess.TimeoutExpired(command, kwargs["timeout"])

@@ -81,6 +81,8 @@ def decode_access_token(token: str, secret: str) -> TokenClaims:
     if user_id < 1 or not role or not jti:
         raise InvalidTokenError("Invalid access token claims")
     return TokenClaims(user_id, role, jti, issued_at, expires_at)
+
+
 @dataclass(frozen=True)
 class AgentContextClaims:
     user_id: int
