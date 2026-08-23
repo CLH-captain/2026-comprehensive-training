@@ -1,6 +1,6 @@
 # DeepSeek Fallback Implementation Plan
 
-> **For agentic workers:** Execute inline task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
+> **For agentic workers:** Execute inline task-by-task. Steps use checkbox (`- [x]`) syntax for tracking.
 
 **Goal:** 在本地 Hermes/Ollama 可恢复失败时，为管理员的聚合统计问题提供受控 DeepSeek 备用回答。
 
@@ -20,22 +20,22 @@
 
 **Files:** `backend/app/agent/deepseek.py`, `backend/app/agent/fallback.py`, `backend/tests/agent/test_deepseek.py`.
 
-- [ ] Add a small OpenAI-compatible DeepSeek client with safe timeout and error mapping.
-- [ ] Add recoverable-error classification and a policy which blocks non-admin and personal-detail requests.
-- [ ] Verify request payload contains only an aggregate snapshot and no secret headers beyond the outbound API authorization.
+- [x] Add a small OpenAI-compatible DeepSeek client with safe timeout and error mapping.
+- [x] Add recoverable-error classification and a policy which blocks non-admin and personal-detail requests.
+- [x] Verify request payload contains only an aggregate snapshot and no secret headers beyond the outbound API authorization.
 
 ### Task 2: Agent API orchestration
 
 **Files:** `backend/app/api/agent.py`, `backend/app/schemas/agent.py`, `backend/tests/api/test_agent.py`.
 
-- [ ] Retry Hermes once only for recoverable failures, then call fallback when policy permits.
-- [ ] Build the aggregate snapshot through `StatisticsService.dashboard()` using term/campus filters.
-- [ ] Return and persist the selected model without exposing fallback prompt or credentials.
+- [x] Retry Hermes once only for recoverable failures, then call fallback when policy permits.
+- [x] Build the aggregate snapshot through `StatisticsService.dashboard()` using term/campus filters.
+- [x] Return and persist the selected model without exposing fallback prompt or credentials.
 
 ### Task 3: Verification and documentation
 
 **Files:** `docs/ROADMAP.md`, `docs/API.md`, `docs/TESTING.md`, `README.md`.
 
-- [ ] Run mock policy/client/API tests and the complete backend regression suite.
-- [ ] Run one real aggregate fallback request after temporarily making the local Hermes call unavailable; restore local service configuration immediately.
-- [ ] Record result, update roadmap, commit and synchronize both remotes.
+- [x] Run mock policy/client/API tests and the complete backend regression suite.
+- [x] Run one real aggregate fallback request after temporarily making the local Hermes call unavailable; restore local service configuration immediately.
+- [x] Record result, update roadmap, commit and synchronize both remotes.

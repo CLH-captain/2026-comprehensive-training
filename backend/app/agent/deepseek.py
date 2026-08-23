@@ -27,7 +27,7 @@ class DeepSeekClient:
     ) -> None:
         self.base_url = base_url.rstrip("/").removesuffix("/v1")
         self.api_key = api_key
-        self.model = model
+        self.model = model.strip().lower()
         self.timeout_seconds = timeout_seconds
         self._post = post
 

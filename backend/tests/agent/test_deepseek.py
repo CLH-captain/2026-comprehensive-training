@@ -70,3 +70,13 @@ def test_deepseek_client_maps_http_failure_to_safe_error() -> None:
         client.chat(question="统计", snapshot={"overview": {}})
 
     assert caught.value.code == "DEEPSEEK_UNAVAILABLE"
+
+
+def test_deepseek_client_normalizes_model_name() -> None:
+    client = DeepSeekClient(
+        base_url="https://api.deepseek.example",
+        api_key="test-key",
+        model="DeepSeek-V4-Flash",
+    )
+
+    assert client.model == "deepseek-v4-flash"

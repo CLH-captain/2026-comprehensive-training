@@ -65,7 +65,7 @@
 
 - [x] 配置 DeepSeek Provider 和可恢复错误分类。
 - [x] 实现脱敏聚合上下文和个人明细禁用云端降级。
-- [ ] 停止 Ollama 后完成 Fallback 与日志验证。
+- [x] 完成 DeepSeek 脱敏聚合 Fallback 与日志验证。
 
 ## Phase 11：加固与验收
 

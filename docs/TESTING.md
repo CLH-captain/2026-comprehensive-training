@@ -84,7 +84,7 @@ pnpm build
 
 - DeepSeek 回退代码覆盖可恢复错误重试、管理员聚合问题、个人明细禁用和脱敏快照。
 - `/models` 诊断确认 Key、地址和 `deepseek-v4-flash` 访问权限可用。
-- DeepSeek ChatCompletions 在真实脱敏请求中返回 HTTP 400；为控制余额，已停止重试。该外部服务校验问题不会影响本地 Hermes/Ollama 主模型。
+- 真实 DeepSeek 回退验证成功：根因是模型名大小写敏感，客户端已自动规范为 `deepseek-v4-flash`；仅发送脱敏总览快照，返回 `deepseek_fallback`。
 
 ## Phase 11 验收记录
 
